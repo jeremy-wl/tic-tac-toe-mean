@@ -15,10 +15,23 @@
     <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/angular-route/angular-route.min.js"></script>
 
+    <!-- font-awesome -->
+    <link rel='stylesheet' href='/bower_components/font-awesome/css/font-awesome.css'>
+
     <script src="app.js"></script>
     <script src="config.js"></script>
 
-    <script src="views/home/home.controller.client.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- home -->
+    <script src="views/home/controllers/home.controller.client.js"></script>
+
+    <!-- users -->
+    <script src="views/users/controllers/login.controller.client.js"></script>
+    <script src="views/users/controllers/profile.controller.client.js"></script>
+    <script src="views/users/controllers/register.controller.client.js"></script>
+    <script src="services/user.service.client.js"></script>
+    <script src="views/users/user-config.js"></script>
 
     <div ng-view></div>
 </head>

@@ -1,0 +1,68 @@
+body {
+  padding: 80px 10px 60px 10px;
+}
+
+.form-element-margin input, textarea {
+  margin-bottom: 5px;
+}
+
+a:hover{
+  text-decoration: none;
+}
+
+a[ng-click]:hover {
+  cursor: hand;
+  cursor: pointer;
+}
+
+.navbar-blue {
+  background-color: #337ab7;
+}
+
+.navbar-gray {
+  background-color: #F9F9F9;
+}
+
+.btn-gray {
+  background-color: #DCDAD1;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.text-black {
+  color: rgba(0, 0, 0, 0.77);
+}
+
+.text-dark-gray {
+  color: #777777;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-blue {
+  color: #337ab7;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+.icon-padding {
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+
+.vertical-divider-right {
+  border-right: 1px solid #cccccc;
+  height: 100%;
+  margin-top: -20px;
+  position: absolute;
+}
+
+div > ul > li.list-group-item {
+  color: #337ab7;
+}

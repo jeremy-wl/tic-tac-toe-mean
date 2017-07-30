@@ -6,11 +6,19 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
+    "dotenv": "^4.0.0",
     "express": "~4.15.2",
+    "express-session": "^1.15.4",
     "mongoose": "^4.11.4",
+    "node-sass": "^4.5.3",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
     "q": "^1.5.0"
   },
   "author": "Wenlin Huang",

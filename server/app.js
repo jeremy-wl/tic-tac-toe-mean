@@ -8,7 +8,7 @@ var connectionString = 'mongodb://localhost/tic-tac-toe' // for local
 //     connectionString += '@ds147821.mlab.com:47821/heroku_sccp2r5d'
 // }
 
-mongoose.connect(connectionString)
+mongoose.connect(connectionString, { useMongoClient: true })
 mongoose.Promise = require('q').Promise
 
 require('./services/user.service.server')

@@ -1,0 +1,40 @@
+<nav class="navbar navbar-fixed-top navbar-blue">
+    <div class="container-fluid">
+        <div class="text-white navbar-brand text-bold">
+            Profile
+        </div>
+        <a class="navbar-link navbar-text pull-right text-white" ng-click="model.updateUser(model.user._id, model.user)">
+            <span class="glyphicon glyphicon-ok"></span>
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid">
+   <form class="form-element-margin">
+       <div class="alert alert-danger" ng-show="model.error">{{model.error}}</div>
+       <div class="alert alert-success" ng-show="model.message">{{model.message}}</div>
+       <label for="username">Username</label>
+       <input type="text" class="form-control" placeholder="Username" id="username" ng-model="model.user.username" required>
+       <label for="email">Email</label>
+       <input type="email" class="form-control" placeholder="alice@emmail.com" id="email" ng-model="model.user.email">
+       <label for="fName">First Name</label>
+       <input type="text" class="form-control" placeholder="first name" id="fName" ng-model="model.user.firstName">
+       <label for="lName">Last Name</label>
+       <input type="text" class="form-control" placeholder="last name" id="lName" ng-model="model.user.lastName">
+   </form>
+
+    <a href="#!/website" class="btn btn-primary btn-block">Websites</a>
+    <a class="btn btn-danger btn-block" ng-click="model.logout()">Logout</a>
+    <a class="btn btn-danger btn-block" ng-click="model.unregisterUser()">Destroy Account</a>
+</div>
+
+<nav class="navbar navbar-fixed-bottom navbar-blue">
+    <div class="container-fluid">
+        <a href="#!/"
+           class="navbar-link navbar-text pull-left text-white glyphicon glyphicon-home">
+        </a>
+        <a href="#!/profile"
+           class="navbar-link navbar-text pull-right text-white glyphicon glyphicon-user">
+        </a>
+    </div>
+</nav>
