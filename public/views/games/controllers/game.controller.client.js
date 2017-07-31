@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('gameController', gameController)
 
-    function gameController() {
+    function gameController(gameService, currentUser) {
         var model = this
         model.startGame = startGame
         model.makeMove = makeMove
@@ -18,8 +18,17 @@
 
         function startGame(isLocal, grid) {
             if (isLocal) {
-                model.grid = 3
+                grid = 3
             }
+            var game = {
+                grid: grid,
+                playerId: currentUser._id
+            }
+            gameService
+                .createGame(game)
+                .then(function (game) {
+                    console.log(game)
+                })
         }
 
         function makeMove(move) {

@@ -7,6 +7,5 @@ gameModel.createGame = createGame
 module.exports = gameModel
 
 function createGame(game) {
-
     return gameModel.create(game)
 }
