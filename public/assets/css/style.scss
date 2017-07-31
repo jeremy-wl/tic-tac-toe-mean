@@ -1,6 +1,6 @@
-body {
-  padding: 80px 10px 60px 10px;
-}
+//body {
+//  padding: 80px 10px 60px 10px;
+//}
 
 .form-element-margin input, textarea {
   margin-bottom: 5px;
@@ -65,4 +65,8 @@ a[ng-click]:hover {
 
 div > ul > li.list-group-item {
   color: #337ab7;
+}
+
+.move-made {
+  background-color: black;
 }
