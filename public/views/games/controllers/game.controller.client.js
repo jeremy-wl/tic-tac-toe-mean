@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('gameController', gameController)
 
-    function gameController(gameService, currentUser) {
+    function gameController(currentUser, gameService, moveService) {
         var model = this
         model.startGame = startGame
         model.makeMove = makeMove
@@ -27,12 +27,24 @@
             gameService
                 .createGame(game)
                 .then(function (game) {
-                    console.log(game)
+                    model.game = game
+                    model.isMyTurn = Math.floor(Math.random() * 2);  // 0 or 1, randomly decides the turn
                 })
         }
 
-        function makeMove(move) {
-            $("td[data-move=" + move +"]").addClass('move-made')
+        function makeMove(position, isMyTurn) {
+            if (isMyTurn) {
+                var move = {
+                    position: position,
+                    _player: currentUser._id
+                }
+                moveService
+                    .makeMove(move, model.game)
+                    .then(function (move) {
+                        $("td[data-move=" + position + "]").addClass('move-made')
+                        model.isMyTurn = 0
+                    })
+            }
         }
 
         function toNumsArray(num) {

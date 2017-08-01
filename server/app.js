@@ -14,4 +14,4 @@ mongoose.Promise = require('q').Promise
 require('./services/user.service.server')
 require('./services/board.service.server')
 require('./services/game.service.server')
-// require('./services/move.service.server')
+require('./services/move.service.server')

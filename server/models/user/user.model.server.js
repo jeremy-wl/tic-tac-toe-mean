@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
 var userSchema = require('./user.schema.server')
 var userModel = mongoose.model('user', userSchema)
 
+userModel.addGamesToPlayer = addGamesToPlayer
 userModel.createUser = createUser
 userModel.findUserById = findUserById
 userModel.findAllUsers = findAllUsers
@@ -18,6 +19,15 @@ function createUser(user) {
         user.roles = ['PLAYER']
     }
     return userModel.create(user)
+}
+
+function addGamesToPlayer(userId, gameId) {
+    return userModel
+        .findById(userId)
+        .then(function (user) {
+            user.games.push(gameId)
+            return user.save()
+        })
 }
 
 function findUserById(userId) {

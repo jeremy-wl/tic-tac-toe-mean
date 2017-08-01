@@ -1,15 +1,22 @@
 var mongoose = require('mongoose')
+var moveSchema = require('./move.schema.server')
+var boardSchema = require('../board/board.schema.server')
+var moveModel = mongoose.model('move', moveSchema)
+var boardModel = mongoose.model('board', boardSchema)
 
-var moveSchema = mongoose.Schema({
-    dateCreated: {
-        type: Date,
-        default: Date.now
-    },
-    _player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'userModel'
-    },
-    position: Number
-})
+moveModel.createMove = createMove
 
-module.exports = moveSchema
+module.exports = moveModel
+
+function createMove(boardId, move) {
+    var res
+    return moveModel
+        .create(move)
+        .then(function (move) {
+            res = move
+            return boardModel.addMoveToBoard(boardId, move)
+        })
+        .then(function (board) {
+            return res
+        })
+}

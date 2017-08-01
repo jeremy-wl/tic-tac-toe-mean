@@ -14,6 +14,8 @@ function createGame(req, res) {
                 board: board._id
             }
             return gameModel.createGame(game)
+        }, function (obj) {
+            console.log(obj)
         })
         .then(function (game) {
             res.json(game)
