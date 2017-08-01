@@ -8,7 +8,7 @@ var boardSchema = mongoose.Schema({
     grid: Number,
     moves: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'moveModel'
+        ref: 'move'
     }]
 })
 

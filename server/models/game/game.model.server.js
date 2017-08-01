@@ -1,8 +1,8 @@
 var mongoose = require('mongoose')
 var gameSchema = require('./game.schema.server')
 var userSchema = require('../user/user.schema.server')
-var gameModel = mongoose.model('game', gameSchema)
 var userModel = mongoose.model('user', userSchema)
+var gameModel = mongoose.model('game', gameSchema)
 
 gameModel.createGame = createGame
 

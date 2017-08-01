@@ -21,7 +21,8 @@
 
     <table class="table table-bordered table-inverse">
         <tr ng-repeat="i in model.rows">
-            <td ng-repeat="j in model.cols" data-move="{{i*model.grid+(j+1)}}" ng-click="model.makeMove(i*model.grid+(j+1), model.isMyTurn)">
+            <td ng-repeat="j in model.cols" data-move="{{i*model.grid+j}}"
+                ng-click="model.makeMove(i*model.grid+j, model.isMyTurn)">
                 row {{i}} col {{j}}
             </td>
         </tr>

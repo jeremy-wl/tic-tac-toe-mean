@@ -1,10 +1,11 @@
 (function () {
     angular
         .module("ttt")
-        .factory("gameService", function ($location, $http) {
+        .factory("gameService", function ($location, $http, moveService) {
             var api = {}
 
             api.createGame = createGame
+            api.robotMove = robotMove
 
             return api
 
@@ -16,5 +17,38 @@
                     })
             }
 
+            function robotMove(game) {
+                return moveService
+                    .getAllMovesFromBoard(game.board)
+                    .then(function (moves) {
+                        var movesStr = movesPositionsToString(moves)
+                        var url = 'http://tttapi.herokuapp.com/api/v1/' + movesStr + '/O'
+                        return $http.get(url)  // {"game":"---------","player":"0","recommendation":2,"strength":-1}
+                            .then(function (obj) {
+                                var move = {
+                                    position: obj.data.recommendation
+                                }
+                                return moveService
+                                    .makeMove(move, game.board)
+                                    .then(function (move) {
+                                        return move
+                                    })
+                            })
+
+                    })
+
+                function movesPositionsToString(moves) {
+                    // construct moves array for api call
+                    var movesArr = ['-','-','-','-','-','-','-','-','-']
+                    for (var i in moves) {
+                        movesArr[moves[i].position] = moves[i]._player ? 'X' : 'O'
+                    }
+                    var movesStr = movesArr.reduce(function (res, item) {
+                        return res += item
+                    }, "")
+
+                    return movesStr
+                }
+            }
         })
 })()
