@@ -12,8 +12,8 @@
 
         function init() {
             model.grid = 3
-            model.rows = toNumsArray(model.grid)
-            model.cols = toNumsArray(model.grid)
+            model.rowIndex = toNumsArray(model.grid)  // [0,1,2,3,...] for iteration in view
+            model.colIndex = toNumsArray(model.grid)
         }
 
         function startGame(isLocal, grid) {
@@ -34,11 +34,7 @@
                     if (!model.isMyTurn) {
                         return gameService
                             .robotMove(game)
-                            .then(function (move) {
-                                model.isMyTurn = 1
-                                $("td[data-move=" + move.position + "]").addClass('move-made-O')
-                                model.moves++
-                            })
+                            .then(moved(model))
                     }
                 })
         }
@@ -51,23 +47,15 @@
                 }
                 return moveService
                     .makeMove(move, model.game.board)
-                    .then(function (move) {
-                        $("td[data-move=" + position + "]").addClass('move-made-X')
-                        model.isMyTurn = 0
-                        model.moves++
-                        // robot move
+                    .then(moved(model))
+                    .then(function () {
                         if (model.moves < 9) {
                             return gameService.robotMove(model.game)
                         } else {
                             throw "Already made last move!"
                         }
                     })
-                    .then(function (move) {
-                        console.log(move)
-                        model.isMyTurn = 1
-                        model.moves++
-                        $("td[data-move=" + move.position + "]").addClass('move-made-O')
-                    })
+                    .then(moved(model))
                     .catch(function (err) {
                         console.log(err)
                     })
@@ -84,20 +72,24 @@
         }
 
         function gridChanged(newGrid) {
-            if (newGrid < 3 || newGrid > 10) {
-                if (newGrid < 3) {
-                    newGrid = 3
-                } else if (newGrid > 10) {
+            if (!Number.isInteger(newGrid) || newGrid < 3 || newGrid > 10) {
+                if (Number.isInteger(newGrid) && newGrid > 10) {
                     newGrid = 10
+                } else {
+                    newGrid = 3
                 }
-                model.message = 'Please enter a number between 3 to 10'
-                window.setTimeout(function () {
-                    delete model.message
-                }, 2000)
+                showMessage(model, 'Please enter a number between 3 to 10')
             }
 
-            model.rows = toNumsArray(newGrid)
-            model.cols = toNumsArray(newGrid)
+            model.rowIndex = toNumsArray(newGrid)
+            model.colIndex = toNumsArray(newGrid)
+        }
+
+        function showMessage(model, message) {
+            model.message = message
+            window.setTimeout(function () {
+                delete model.message
+            }, 2000)
         }
 
         function resetGame() {
@@ -105,6 +97,15 @@
                 $(this).removeClass("move-made-O")
                 $(this).removeClass("move-made-X")
             })
+        }
+
+        function moved(model) {
+            return function (move) {
+                var cssClass = model.isMyTurn ? 'move-made-X' : 'move-made-O'
+                $("td[data-move=" + move.position + "]").addClass(cssClass)
+                model.isMyTurn = !model.isMyTurn
+                model.moves++
+            }
         }
     }
 })()
