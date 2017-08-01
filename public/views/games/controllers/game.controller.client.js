@@ -44,7 +44,7 @@
         }
 
         function makeMove(position, isMyTurn) {
-            if (isMyTurn && model.moves < 9) {  // TODO: should not make move if wins/loses
+            if (isMyTurn && isValidMove(position)) {  // TODO: should not make move if wins/loses
                 var move = {
                     position: position,
                     _player: currentUser._id
@@ -59,14 +59,23 @@
                         if (model.moves < 9) {
                             return gameService.robotMove(model.game)
                         } else {
-                            resolve()
+                            throw "Already made last move!"
                         }
                     })
                     .then(function (move) {
+                        console.log(move)
                         model.isMyTurn = 1
                         model.moves++
                         $("td[data-move=" + move.position + "]").addClass('move-made-O')
                     })
+                    .catch(function (err) {
+                        console.log(err)
+                    })
+            }
+
+            function isValidMove(position) {
+                var $cell = $("td[data-move=" + position + "]")
+                return !$cell.hasClass('move-made-X') && !$cell.hasClass('move-made-O')
             }
         }
 
