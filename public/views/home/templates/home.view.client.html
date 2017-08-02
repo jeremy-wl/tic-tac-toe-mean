@@ -1,3 +1,11 @@
 <h3>#home</h3>
 
-<a href="#!/game">Enter Game</a>
+<div class="container-fluid">
+    <a class="btn btn-success" href="#!/game">Local Game</a> <br><br><br>
+
+    <div>
+        <a ng-click="model.showOnlineButtons()">Online Game</a>
+        <a ng-show="!model.local" class="btn btn-primary">Create Game</a>
+        <a ng-show="!model.local" class="btn btn-info">Join Game</a>
+    </div>
+</div>

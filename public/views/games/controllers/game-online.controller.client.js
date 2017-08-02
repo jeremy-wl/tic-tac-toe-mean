@@ -1,9 +1,9 @@
 (function () {
     angular
         .module('ttt')
-        .controller('gameController', gameController)
+        .controller('gameOnlineController', gameOnlineController)
 
-    function gameController(currentUser, gameService, gameHelpers, moveService) {
+    function gameOnlineController(currentUser, gameService, gameHelpers, moveService) {
         var model = this
         model.startGame = startGame
         model.makeMove = makeMove
@@ -12,23 +12,26 @@
         init()
 
         function init() {
+            model.players = {
+                player1Ready: false,
+                player2Ready: false
+            }
             model.grid = 3
             model.rowIndex = gameHelpers.toNumsArray(model.grid)  // [0,1,2,3,...] for iteration in view
             model.colIndex = gameHelpers.toNumsArray(model.grid)
         }
 
-        function startGame(isLocal) {
+        function startGame(grid) {
             gameHelpers.resetGame()
             model.moves = 0
-            if (isLocal)  model.grid = 3
 
-            model.rows = new Array(model.grid).fill(0)
-            model.cols = new Array(model.grid).fill(0)
+            model.rows = new Array(grid).fill(0)
+            model.cols = new Array(grid).fill(0)
             model.dia1 = 0
             model.dia2 = 0
 
             var game = {
-                grid: model.grid,
+                grid: grid,
                 playerId: currentUser._id
             }
             return gameService
@@ -86,46 +89,5 @@
             model.colIndex = gameHelpers.toNumsArray(newGrid)
         }
 
-        function moved(model) {
-            return function (move) {
-                var position = move.position
-                var cssClass = model.isMyTurn ? 'move-made-X' : 'move-made-O'
-                $("td[data-move=" + position + "]").addClass(cssClass)
-                model.moves++
-
-                var n = model.grid,
-                    i = Math.floor(position/n), j = position % n,
-                    val = model.isMyTurn ? 1 : -1
-
-                model.rows[i] += val
-                model.cols[j] += val
-
-                if (i === j)      model.dia1 += val
-                if (i === n-j-1)  model.dia2 += val
-
-                // Someone wins
-                if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
-                    Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    model.game.result = model.isMyTurn ? 'You win!' : 'You lose!'
-                    var winner = model.isMyTurn ? model.game._player1 : 'robot'
-                    return gameService
-                        .addWinnerToGame(model.game, winner)
-                        .then(function (game) {
-                            return model.game.result  // if it is my turn, i win; otherwise, robot wins (i lose)
-                        })
-                }
-                // No empty cells left
-                if (model.moves === n * n) {
-                    model.game.result = "It's a tie."
-                    return gameService
-                        .addWinnerToGame(model.game, 'tie')
-                        .then(function (game) {
-                            return model.game.result
-                        })
-                }
-                model.isMyTurn = !model.isMyTurn
-                return 'ongoing'
-            }
-        }
     }
 })()

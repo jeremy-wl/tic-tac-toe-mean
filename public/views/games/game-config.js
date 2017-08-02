@@ -6,8 +6,16 @@
     function configuration($routeProvider) {
         $routeProvider
             .when('/game', {
-                templateUrl: 'views/games/templates/game.view.client.html',
-                controller: 'gameController',
+                templateUrl: 'views/games/templates/game-local.view.client.html',
+                controller: 'gameLocalController',
+                controllerAs: 'model',
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
+            })
+            .when('/game/:socketId', {
+                templateUrl: 'views/games/templates/game-online.view.client.html',
+                controller: 'gameOnlineController',
                 controllerAs: 'model',
                 resolve: {
                     currentUser: checkLoggedIn

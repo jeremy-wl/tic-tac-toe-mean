@@ -8,21 +8,6 @@
         {{model.game.result}}
     </div>
 
-    <div class="radio">
-        <label><input type="radio" ng-model="model.isLocal" value="local">Local</label>
-    </div>
-
-    <div class="radio">
-        <label><input type="radio" ng-model="model.isLocal" value="online">Online</label>
-    </div>
-
-    <div ng-show="model.isLocal === 'online'">
-        <label for="grid">Grid</label>
-        <input id="grid" type="number" ng-model="model.grid" ng-change="model.gridChanged(model.grid)">
-    </div>
-
-    <button ng-click="model.startGame(model.isLocal, model.grid)">start</button>
-
     <table class="table table-bordered table-inverse">
         <tr ng-repeat="i in model.rowIndex">
             <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}"
@@ -31,6 +16,15 @@
             </td>
         </tr>
     </table>
+
+    <div>
+        <label for="grid">Grid</label>
+        <input id="grid" type="number" ng-model="model.grid" ng-change="model.gridChanged(model.grid)">
+
+        <button class="btn btn-info">Ready</button>
+    </div>
+
+    <button class="btn btn-success btn-block" ng-click="model.startGame(model.isLocal, model.grid)">start</button>
 
 </div>
 

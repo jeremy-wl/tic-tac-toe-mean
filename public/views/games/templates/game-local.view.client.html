@@ -1,0 +1,20 @@
+<div class="container-fluid">
+
+    <div class="alert alert-success" ng-show="model.game.result">
+        {{model.game.result}}
+    </div>
+
+    <table class="table table-bordered table-inverse">
+        <tr ng-repeat="i in model.rowIndex">
+            <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}"
+                ng-click="model.makeMove(i*model.grid+j, model.isMyTurn)">
+                row {{i}} col {{j}}
+            </td>
+        </tr>
+    </table>
+
+    <button class="btn btn-block btn-success" ng-click="model.startGame(model.grid)">start</button>
+
+</div>
+
+{{model}}
