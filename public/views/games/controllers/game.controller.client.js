@@ -124,17 +124,28 @@
                 if (i === j)      model.dia1 += val
                 if (i === n-j-1)  model.dia2 += val
 
+                // Someone wins
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
                     model.game.result = model.isMyTurn ? 'You win!' : 'You lose!'
-                    return model.isMyTurn  // if it is my turn, i win; otherwise, robot wins (i lose)
+                    var winner = model.isMyTurn ? model.game._player1 : 'robot'
+                    return gameService
+                        .addWinnerToGame(model.game, winner)
+                        .then(function (game) {
+                            return model.game.result  // if it is my turn, i win; otherwise, robot wins (i lose)
+                        })
+                }
+                // No empty cells left
+                if (model.moves === n * n) {
+                    model.game.result = "It's a tie."
+                    return gameService
+                        .addWinnerToGame(model.game, 'tie')
+                        .then(function (game) {
+                            return model.game.result
+                        })
                 }
                 model.isMyTurn = !model.isMyTurn
-                var ret = model.moves === n * n ? 'tie' : 'ongoing'
-                if (ret === 'tie') {
-                    model.game.result = "It's a tie."
-                }
-                return ret
+                return 'ongoing'
             }
         }
     }

@@ -6,6 +6,7 @@
 
             api.createGame = createGame
             api.robotMove = robotMove
+            api.addWinnerToGame = addWinnerToGame
 
             return api
 
@@ -49,6 +50,15 @@
 
                     return movesStr
                 }
+            }
+
+            function addWinnerToGame(game, winner) {
+                var url = '/api/games/' + game._id + '/winner/'
+                game.winner = winner
+                return $http.post(url, game)
+                    .then(function (res) {
+                        return res.data
+                    })
             }
         })
 })()

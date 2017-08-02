@@ -5,6 +5,7 @@ var userModel = mongoose.model('user', userSchema)
 var gameModel = mongoose.model('game', gameSchema)
 
 gameModel.createGame = createGame
+gameModel.addWinnerToGame = addWinnerToGame
 
 module.exports = gameModel
 
@@ -17,5 +18,14 @@ function createGame(game) {
                 userModel.addGamesToPlayer(game._player2, game._id)
             }
             return game
+        })
+}
+
+function addWinnerToGame(game, winner) {
+    return gameModel
+        .findById(game._id)
+        .then(function (game) {
+            game._winner = winner
+            return game.save()
         })
 }
