@@ -16,14 +16,18 @@
             model.colIndex = toNumsArray(model.grid)
         }
 
-        function startGame(isLocal, grid) {
+        function startGame(isLocal) {
             resetGame()
             model.moves = 0
-            if (isLocal) {
-                grid = 3
-            }
+            if (isLocal)  model.grid = 3
+
+            model.rows = new Array(model.grid).fill(0)
+            model.cols = new Array(model.grid).fill(0)
+            model.dia1 = 0
+            model.dia2 = 0
+
             var game = {
-                grid: grid,
+                grid: model.grid,
                 playerId: currentUser._id
             }
             return gameService
@@ -40,7 +44,7 @@
         }
 
         function makeMove(position, isMyTurn) {
-            if (isMyTurn && isValidMove(position)) {  // TODO: should not make move if wins/loses
+            if (isMyTurn && !model.game.result && isValidMove(position)) {
                 var move = {
                     position: position,
                     _player: currentUser._id
@@ -48,7 +52,8 @@
                 return moveService
                     .makeMove(move, model.game.board)
                     .then(moved(model))
-                    .then(function () {
+                    .then(function (gameResult) {
+                        console.log(gameResult)
                         if (model.moves < 9) {
                             return gameService.robotMove(model.game)
                         } else {
@@ -56,6 +61,9 @@
                         }
                     })
                     .then(moved(model))
+                    .then(function (gameResult) {
+                        console.log(gameResult)
+                    })
                     .catch(function (err) {
                         console.log(err)
                     })
@@ -101,10 +109,32 @@
 
         function moved(model) {
             return function (move) {
+                var position = move.position
                 var cssClass = model.isMyTurn ? 'move-made-X' : 'move-made-O'
-                $("td[data-move=" + move.position + "]").addClass(cssClass)
-                model.isMyTurn = !model.isMyTurn
+                $("td[data-move=" + position + "]").addClass(cssClass)
                 model.moves++
+
+                var n = model.grid,
+                    i = Math.floor(position/n), j = position % n,
+                    val = model.isMyTurn ? 1 : -1
+
+                model.rows[i] += val
+                model.cols[j] += val
+
+                if (i === j)      model.dia1 += val
+                if (i === n-j-1)  model.dia2 += val
+
+                if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
+                    Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
+                    model.game.result = model.isMyTurn ? 'You win!' : 'You lose!'
+                    return model.isMyTurn  // if it is my turn, i win; otherwise, robot wins (i lose)
+                }
+                model.isMyTurn = !model.isMyTurn
+                var ret = model.moves === n * n ? 'tie' : 'ongoing'
+                if (ret === 'tie') {
+                    model.game.result = "It's a tie."
+                }
+                return ret
             }
         }
     }

@@ -4,6 +4,10 @@
         {{model.message}}
     </div>
 
+    <div class="alert alert-success" ng-show="model.game.result">
+        {{model.game.result}}
+    </div>
+
     <div class="radio">
         <label><input type="radio" ng-model="model.isLocal" value="local">Local</label>
     </div>
