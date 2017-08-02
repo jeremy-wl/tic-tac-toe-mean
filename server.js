@@ -29,4 +29,4 @@ require('./server/app')
 
 var port = process.env.PORT || 3000
 
-app.listen(port)
+var server = app.listen(port)
