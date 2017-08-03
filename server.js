@@ -37,15 +37,14 @@ var socketQueue = []
 io.on('connection', function (socket) {
     socket.on('join game', function (username) {
 
-        var room
-
         if (socketQueue.length === 0) {
             socket.join(socket.id)
             socketQueue.push(socket)
             console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + socket.id)
         } else {
-            var opponentSocket = socketQueue.shift()  // dequeue, now?
-            room = opponentSocket.id
+            var opponentSocket = socketQueue[0]  // dequeue, now?
+            // var opponentSocket = socketQueue.shift()  // dequeue, now?
+            var room = opponentSocket.id
             socket.join(room)
             io.to(room).emit('joins room', username)
             console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + room)
@@ -53,10 +52,19 @@ io.on('connection', function (socket) {
     })
 
     socket.on('share initial data', function (data) {
-        var room = Object.keys(socket.adapter.rooms)[1]
+        var room = Object.keys(socket.adapter.rooms)[0]
         io.to(room).emit('share initial data', data)
     })
 
+    socket.on('change grid', function (newGrid) {
+        var room = Object.keys(socket.adapter.rooms)[0]
+        io.to(room).emit('change grid', newGrid)
+    })
+
+    socket.on('getting ready', function (ready) {
+        var room = Object.keys(socket.adapter.rooms)[0]
+        io.to(room).emit('getting ready', ready)
+    })
 })
 
 var server = http.listen(port)

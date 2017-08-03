@@ -17,14 +17,14 @@
         </tr>
     </table>
 
-    <div>
-        <label for="grid">Grid</label>
-        <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
+    <div class="game-settings">
+        <div class="game-settings-grid">
+            <label for="grid">Grid</label>
+            <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
+        </div>
 
-        <button class="btn btn-info">Ready</button>
+        <button class="btn btn-info ready" ng-click="model.ready()">Ready</button>
     </div>
-
-    <button class="btn btn-success btn-block" ng-click="model.startGame(model.isLocal, model.shared.grid)">Start</button>
 
 </div>
 

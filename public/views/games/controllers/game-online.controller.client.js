@@ -5,6 +5,7 @@
 
     function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
         var model = this
+        model.ready = ready
         model.startGame = startGame
         model.makeMove = makeMove
         model.gridChanged = gridChanged
@@ -14,7 +15,7 @@
         function init() {
             model.shared = {
                 grid: 3,
-                ready: 0
+                ready: []
             }
 
             socket.emit('join game', currentUser.username)
@@ -23,16 +24,45 @@
                 if (username !== currentUser.username) {
                     console.log('sharing share initial data')
                     socket.emit('share initial data', model.shared)
+                    model.isMyTurn = 1
+                } else {
+                    model.isMyTurn = 0  // second person gets the second turn
                 }
             })
             socket.on('share initial data', function (data) {
                 model.shared = data
                 model.gridChanged(data.grid)
                 console.log('synced initialized data')
+                if (model.shared.ready.length > 0) {
+                    $('.game-settings-grid').remove()
+                }
+            })
+
+            socket.on('getting ready', function (ready) {
+                model.shared.ready = ready
+                if (ready.length === 1) {
+                    if (ready.indexOf(currentUser.username) < 0) {  // the other player is ready
+                        $('.game-settings-grid').remove()
+                    } else {                                        // i am ready
+                        $('.game-settings').children().each(function() {
+                            $(this).remove()
+                        })
+                        $('.game-settings').append('Waiting for your opponent to get ready ...')
+                    }
+                } else if (ready.length >= 2) {                     // both ready
+                    $('.game-settings').remove()
+                }
             })
 
             model.gridChanged(model.shared.grid)
             console.log(model.shared)
+        }
+
+        function ready() {
+            if (model.shared.ready.indexOf(currentUser.username) < 0) {
+                model.shared.ready.push(currentUser.username)
+            }
+            socket.emit('getting ready', model.shared.ready)
         }
 
         function startGame(grid) {
@@ -96,11 +126,15 @@
                 } else {
                     newGrid = 3
                 }
-                gameHelpers.showMessage(model, 'Please enter a number between 3 to 10')
+                // gameHelpers.showMessage(model, 'Please enter a number between 3 to 10')
             }
 
-            model.rowIndex = gameHelpers.toNumsArray(newGrid)
-            model.colIndex = gameHelpers.toNumsArray(newGrid)
+            socket.emit('change grid', newGrid)
+            socket.on('change grid', function (grid) {
+                model.shared.grid = grid
+                model.rowIndex = gameHelpers.toNumsArray(grid)
+                model.colIndex = gameHelpers.toNumsArray(grid)
+            })
         }
 
     }
