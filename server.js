@@ -61,10 +61,21 @@ io.on('connection', function (socket) {
         io.to(room).emit('change grid', newGrid)
     })
 
-    socket.on('getting ready', function (ready) {
+    socket.on('getting ready', function (sharedData) {
         var room = Object.keys(socket.adapter.rooms)[0]
-        io.to(room).emit('getting ready', ready)
+        io.to(room).emit('getting ready', sharedData)
     })
+
+    socket.on('move made', function(moveObj){
+        var room = Object.keys(socket.adapter.rooms)[0]
+        io.to(room).emit('move made', moveObj)
+    });
+
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+
+
 })
 
 var server = http.listen(port)

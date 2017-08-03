@@ -11,7 +11,8 @@ function createGame(req, res) {
         .createBoard(obj.grid)
         .then(function (board) {
             var game = {
-                _player1: obj.playerId,
+                _player1: obj._player1,
+                _player2: obj._player2,
                 board: board._id
             }
             return gameModel.createGame(game)

@@ -8,6 +8,7 @@
             api.resetGame = resetGame
             api.isValidMove = isValidMove
             api.showMessage = showMessage
+            api.getOpponentId = getOpponentId
 
             return api
 
@@ -33,6 +34,10 @@
                 window.setTimeout(function () {
                     delete model.message
                 }, 2000)
+            }
+
+            function getOpponentId(players, currentUserId) {
+                return players[0] === currentUserId ? players[1] : players[0]
             }
         })
 })()
