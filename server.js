@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(cookieParser())
 app.use(session({
-    secret: process.env.WD_SESSION_SECRET, // secret 应该以这种方式获得, 不应直接存于源代码中, 而应存环境变量中
-    resave: true,                          // 从而只有有管理这台服务器权限的人才能知道 secret
+    secret: process.env.WD_SESSION_SECRET,
+    resave: true,
     saveUninitialized: true
 }))
 app.use(passport.initialize())
@@ -29,4 +29,34 @@ require('./server/app')
 
 var port = process.env.PORT || 3000
 
-var server = app.listen(port)
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+var socketQueue = []
+
+io.on('connection', function (socket) {
+    socket.on('join game', function (username) {
+
+        var room
+
+        if (socketQueue.length === 0) {
+            socket.join(socket.id)
+            socketQueue.push(socket)
+            console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + socket.id)
+        } else {
+            var opponentSocket = socketQueue.shift()  // dequeue, now?
+            room = opponentSocket.id
+            socket.join(room)
+            io.to(room).emit('joins room', username)
+            console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + room)
+        }
+    })
+
+    socket.on('share initial data', function (data) {
+        var room = Object.keys(socket.adapter.rooms)[1]
+        io.to(room).emit('share initial data', data)
+    })
+
+})
+
+var server = http.listen(port)

@@ -10,8 +10,8 @@
 
     <table class="table table-bordered table-inverse">
         <tr ng-repeat="i in model.rowIndex">
-            <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}"
-                ng-click="model.makeMove(i*model.grid+j, model.isMyTurn)">
+            <td ng-repeat="j in model.colIndex" data-move="{{i*model.shared.grid+j}}"
+                ng-click="model.makeMove(i*model.shared.grid+j, model.isMyTurn)">
                 row {{i}} col {{j}}
             </td>
         </tr>
@@ -19,12 +19,12 @@
 
     <div>
         <label for="grid">Grid</label>
-        <input id="grid" type="number" ng-model="model.grid" ng-change="model.gridChanged(model.grid)">
+        <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
 
         <button class="btn btn-info">Ready</button>
     </div>
 
-    <button class="btn btn-success btn-block" ng-click="model.startGame(model.isLocal, model.grid)">start</button>
+    <button class="btn btn-success btn-block" ng-click="model.startGame(model.isLocal, model.shared.grid)">Start</button>
 
 </div>
 

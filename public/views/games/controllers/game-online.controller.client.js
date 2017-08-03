@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('gameOnlineController', gameOnlineController)
 
-    function gameOnlineController(currentUser, gameService, gameHelpers, moveService) {
+    function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
         var model = this
         model.startGame = startGame
         model.makeMove = makeMove
@@ -12,13 +12,27 @@
         init()
 
         function init() {
-            model.players = {
-                player1Ready: false,
-                player2Ready: false
+            model.shared = {
+                grid: 3,
+                ready: 0
             }
-            model.grid = 3
-            model.rowIndex = gameHelpers.toNumsArray(model.grid)  // [0,1,2,3,...] for iteration in view
-            model.colIndex = gameHelpers.toNumsArray(model.grid)
+
+            socket.emit('join game', currentUser.username)
+            socket.on('joins room', function (username) {
+                console.log(username + ' joins the room')
+                if (username !== currentUser.username) {
+                    console.log('sharing share initial data')
+                    socket.emit('share initial data', model.shared)
+                }
+            })
+            socket.on('share initial data', function (data) {
+                model.shared = data
+                model.gridChanged(data.grid)
+                console.log('synced initialized data')
+            })
+
+            model.gridChanged(model.shared.grid)
+            console.log(model.shared)
         }
 
         function startGame(grid) {
