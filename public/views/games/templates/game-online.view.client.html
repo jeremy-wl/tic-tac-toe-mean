@@ -22,9 +22,10 @@
             <label for="grid">Grid</label>
             <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
         </div>
-
-        <button class="btn btn-info ready" ng-click="model.getReady()">Ready</button>
     </div>
+
+    <a ng-show="!model.local" class="btn btn-primary" ng-click="model.createRoom()">Create Game</a>
+    <a ng-show="!model.local" class="btn btn-info" ng-click="model.joinRoom()">Join Game</a>
 
 </div>
 

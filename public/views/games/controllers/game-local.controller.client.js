@@ -27,7 +27,7 @@
 
             var game = {
                 grid: grid,
-                _player1: currentUser._id
+                _player1: currentUser.username
             }
             return gameService
                 .createGame(game)

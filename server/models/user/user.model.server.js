@@ -21,9 +21,9 @@ function createUser(user) {
     return userModel.create(user)
 }
 
-function addGamesToPlayer(userId, gameId) {
+function addGamesToPlayer(username, gameId) {
     return userModel
-        .findById(userId)
+        .findUserByUsername(username)
         .then(function (user) {
             user.games.push(gameId)
             return user.save()

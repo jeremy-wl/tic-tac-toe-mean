@@ -50,7 +50,7 @@ io.on('connection', function (socket) {
         for (var i in socketQueue) {
             var room = socketQueue[i]
             var clients = io.sockets.adapter.rooms[room].sockets
-            var numClients = (typeof clients !== 'undefined') ? Object.keys(clients).length : 0;
+            var numClients = (typeof clients !== 'undefined') ? Object.keys(clients).length : 0
             if (numClients === 1) {
                 socket.join(room)
                 console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + room)
@@ -63,18 +63,8 @@ io.on('connection', function (socket) {
     })
 
     socket.on('share initial data', function (data) {
-        var room = Object.keys(socket.adapter.rooms)[0]
+        var room = socket.id
         io.to(room).emit('share initial data', data)
-    })
-
-    socket.on('change grid', function (newGrid) {
-        var room = Object.keys(socket.adapter.rooms)[0]
-        io.to(room).emit('change grid', newGrid)
-    })
-
-    socket.on('getting ready', function (sharedData) {
-        var room = Object.keys(socket.adapter.rooms)[0]
-        io.to(room).emit('getting ready', sharedData)
     })
 
     socket.on('game start', function (data) {

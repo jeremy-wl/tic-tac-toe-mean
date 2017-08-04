@@ -5,7 +5,8 @@
 
     function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
         var model = this
-        model.getReady = getReady
+        model.createRoom = createRoom
+        model.joinRoom = joinRoom
         model.startGame = startGame
         model.makeMove = makeMove
         model.afterMove = afterMove
@@ -28,12 +29,27 @@
             // })
 
 
-            socket.on('join room', function (username) {
+            socket.on('join room', function (username) {  // 2nd player joins, 1st player creates game
                 console.log(username + ' joins the room')
                 if (username !== currentUser.username) {
-                    console.log('sharing share initial data')
-                    socket.emit('share initial data', model.shared)
-                    model.isMyTurn = 1
+
+                    var _player2 = username
+
+                    var game = {
+                        grid: model.shared.grid,
+                        _player1: currentUser.username,
+                        _player2: _player2
+                    }
+
+                    return gameService
+                        .createGame(game)
+                        .then(function (game) {
+                            model.shared.game = game
+                            console.log('sharing share initial data')
+                            socket.emit('share initial data', model.shared)
+                            model.isMyTurn = 1
+                        })
+
                 } else {
                     model.isMyTurn = 0  // second person gets the second turn
                 }
@@ -41,71 +57,15 @@
             socket.on('share initial data', function (data) {
                 model.shared = data
                 model.gridChanged(data.grid)
+
+                // model.shared.game = data.game
+                startGame(model.shared.grid)
+
                 console.log('synced initialized data')
-                if (model.shared.players.length > 0) {
-                    $('.game-settings-grid').remove()
-                }
-            })
 
-            socket.on('getting ready', function (sharedData) {
-                model.shared.players = sharedData.players
-                var players = sharedData.players
-                if (players.length === 1) {
-                    if (players.indexOf(currentUser._id) < 0) {  // the other player is ready
-                        $('.game-settings-grid').remove()
-                    } else {                                        // i am ready
-                        var $gameSettings = $('.game-settings')
-                        $gameSettings.children().each(function() {
-                            $(this).remove()
-                        })
-                        $gameSettings.append('Waiting for your opponent to get ready ...')
-                    }
-                } else if (players.length >= 2) {                     // both ready
-                    $('.game-settings').remove()
-                    gameHelpers.showMessage(model, 'The game starts!')
-                    model.shared.game = sharedData.game
-                    startGame(model.shared.grid)
-                }
-            })
-
-            socket.on('change grid', function (grid) {
-                model.shared.grid = grid
-                model.rowIndex = gameHelpers.toNumsArray(grid)
-                model.colIndex = gameHelpers.toNumsArray(grid)
             })
 
             socket.on('move made', afterMove(model))
-
-            model.gridChanged(model.shared.grid)
-        }
-
-        function getReady() {
-            if (model.shared.players.indexOf(currentUser._id) < 0) {
-                model.shared.players.push(currentUser._id)
-                socket.emit('getting ready', model.shared)
-            }
-
-            if (model.shared.players.length === 2) {
-
-                var _opponentId = gameHelpers.getOpponentId(model.shared.players, currentUser._id)
-                var _player1 =  model.isMyTurn ? currentUser._id : _opponentId
-                var _player2 = !model.isMyTurn ? currentUser._id : _opponentId
-
-                var game = {
-                    grid: model.shared.grid,
-                    _player1: _player1,
-                    _player2: _player2
-                }
-
-                socket.emit('game start')
-
-                return gameService
-                    .createGame(game)
-                    .then(function (game) {
-                        model.shared.game = game
-                        socket.emit('getting ready', model.shared)
-                    })
-            }
         }
 
         function startGame(grid) {
@@ -117,6 +77,15 @@
             model.dia1 = 0
             model.dia2 = 0
         }
+
+        function createRoom() {
+            socket.emit('create room', currentUser.username)
+        }
+
+        function joinRoom() {
+            socket.emit('join room', currentUser.username)
+        }
+
 
         /**
          * After a user make a move,
@@ -187,8 +156,8 @@
                     newGrid = 3
                 }
             }
-
-            socket.emit('change grid', newGrid)
+            model.rowIndex = gameHelpers.toNumsArray(newGrid)
+            model.colIndex = gameHelpers.toNumsArray(newGrid)
         }
     }
 })()

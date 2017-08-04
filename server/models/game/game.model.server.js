@@ -18,6 +18,8 @@ function createGame(game) {
                 userModel.addGamesToPlayer(game._player2, game._id)
             }
             return game
+        }, function (err) {
+            console.log(err)
         })
 }
 
