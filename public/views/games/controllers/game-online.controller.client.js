@@ -5,10 +5,10 @@
 
     function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
         var model = this
-        model.ready = ready
+        model.getReady = getReady
         model.startGame = startGame
         model.makeMove = makeMove
-        model.moved = moved
+        model.afterMove = afterMove
         model.gridChanged = gridChanged
 
         init()
@@ -54,10 +54,11 @@
                     if (players.indexOf(currentUser._id) < 0) {  // the other player is ready
                         $('.game-settings-grid').remove()
                     } else {                                        // i am ready
-                        $('.game-settings').children().each(function() {
+                        var $gameSettings = $('.game-settings')
+                        $gameSettings.children().each(function() {
                             $(this).remove()
                         })
-                        $('.game-settings').append('Waiting for your opponent to get ready ...')
+                        $gameSettings.append('Waiting for your opponent to get ready ...')
                     }
                 } else if (players.length >= 2) {                     // both ready
                     $('.game-settings').remove()
@@ -73,13 +74,12 @@
                 model.colIndex = gameHelpers.toNumsArray(grid)
             })
 
-            socket.on('move made', moved(model))
+            socket.on('move made', afterMove(model))
 
             model.gridChanged(model.shared.grid)
-            console.log(model.shared)
         }
 
-        function ready() {
+        function getReady() {
             if (model.shared.players.indexOf(currentUser._id) < 0) {
                 model.shared.players.push(currentUser._id)
                 socket.emit('getting ready', model.shared)
@@ -100,7 +100,6 @@
                 return gameService
                     .createGame(game)
                     .then(function (game) {
-                        // model.shared.game = game
                         model.shared.game = game
                         socket.emit('getting ready', model.shared)
                     })
@@ -117,6 +116,19 @@
             model.dia2 = 0
         }
 
+        /**
+         * After a user make a move,
+         * 0. check if it is a valid move
+         * 1. insert the move in db
+         * 2. check if the game ends (the current user wins / the game ties) after this move
+         *    - if so
+         *      * insert the winner (playerId / 'tie') in db for this game
+         *      * set model.result accordingly
+         *    - otherwise
+         * 3. socket emit
+         *    - move
+         *    - gameResult (if game end)
+         */
         function makeMove(position, isMyTurn) {
             if (isMyTurn && !model.result && gameHelpers.isValidMove(position)) {
                 var move = {
@@ -125,64 +137,43 @@
                 }
                 return moveService
                     .makeMove(move, model.shared.game.board)
-                    .then(function () {
+                    .then(function (move) {  // TODO: check anyone wins
+                        var winner = gameHelpers.checkWinner(model, move, currentUser)
+                        if (winner) {
+                            return gameService
+                                .addWinnerToGame(model.shared.game, winner)
+                                .then(function (game) {
+                                    move.winner = winner
+                                    return move
+                                })
+
+                        } else {
+                            return move
+                        }
+                    })
+                    .then(function (move) {
                         socket.emit('move made', move)
                     })
             }
         }
 
-        function moved(model) {
-            return function (moveObj) {
-                var position = moveObj.position
-                var cssClass = moveObj._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
-                $("td[data-move=" + position + "]").addClass(cssClass)
+        function afterMove(model) {
+            return function (move) {
                 model.moves++
 
-                var n = model.shared.grid,
-                    i = Math.floor(position/n), j = position % n,
-                    val = model.isMyTurn ? 1 : -1
+                var winner = move.winner
 
-                model.rows[i] += val
-                model.cols[j] += val
-
-                if (i === j)      model.dia1 += val
-                if (i === n-j-1)  model.dia2 += val
-
-                // Someone wins
-                if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
-                    Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    model.result = model.isMyTurn ? 'You win!' : 'You lose!'
-                    var opponentId = gameHelpers.getOpponentId(model.shared.players, currentUser._id)
-                    var winner = model.isMyTurn ? currentUser._id : opponentId
-                    return gameService
-                        .addWinnerToGame(model.shared.game, winner)
-                        .then(function (game) {
-                            return model.result  // if it is my turn, i win; otherwise, robot wins (i lose)
-                        })
+                if (winner) {
+                    if (winner !== 'tie') model.result = move.winner === currentUser._id ? 'You win :)' : 'You lose :('
+                    else                  model.result = "It's a tie."
                 }
-                // No empty cells left
-                if (model.moves === n * n) {
-                    model.result = "It's a tie."
-                    return gameService
-                        .addWinnerToGame(model.shared.game, 'tie')
-                        .then(function (game) {
-                            return model.result
-                        })
-                }
+
+                var position = move.position
+                var cssClass = move._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
+                $("td[data-move=" + position + "]").addClass(cssClass)
+
                 model.isMyTurn = !model.isMyTurn
-                console.log('ongoing')
-                // .then(moved(model))
-                //         .then(function (gameResult) {
-                //             console.log(gameResult)
-                //             var grid = model.shared.grid
-                //             if (model.moves >= grid * grid) {
-                //                 throw "Already made last move!"
-                //             }
-                //         })
-                //         .catch(function (err) {
-                //             console.log(err)
-                //         })
-
+                console.log(!model.result ? 'ongoing' : model.result)
             }
         }
 
@@ -193,7 +184,6 @@
                 } else {
                     newGrid = 3
                 }
-                // gameHelpers.showMessage(model, 'Please enter a number between 3 to 10')
             }
 
             socket.emit('change grid', newGrid)

@@ -9,6 +9,7 @@
             api.isValidMove = isValidMove
             api.showMessage = showMessage
             api.getOpponentId = getOpponentId
+            api.checkWinner = checkWinner
 
             return api
 
@@ -39,5 +40,34 @@
             function getOpponentId(players, currentUserId) {
                 return players[0] === currentUserId ? players[1] : players[0]
             }
+
+            function checkWinner(model, move, currentUser) {
+                var n = model.shared.grid,
+                    i = Math.floor(move.position/n), j = move.position % n,
+                    val = model.isMyTurn ? 1 : -1
+
+                model.rows[i] += val
+                model.cols[j] += val
+
+                if (i === j)      model.dia1 += val
+                if (i === n-j-1)  model.dia2 += val
+
+                // Someone wins
+
+                var winner
+
+                if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
+                    Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
+                    var opponentId = getOpponentId(model.shared.players, currentUser._id)
+                    winner = model.isMyTurn ? currentUser._id : opponentId
+                }
+                // No empty cells left
+                else if (model.moves === n * n - 1) {  // total moves becomes n² after this move
+                    winner = 'tie'
+                }
+
+                return winner
+            }
+
         })
 })()
