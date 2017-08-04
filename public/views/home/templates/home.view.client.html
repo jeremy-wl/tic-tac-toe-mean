@@ -5,7 +5,7 @@
 
     <div>
         <a ng-click="model.showOnlineButtons()">Online Game</a>
-        <a ng-show="!model.local" class="btn btn-primary" href="#!/online">Create Game</a>
-        <a ng-show="!model.local" class="btn btn-info">Join Game</a>
+        <a ng-show="!model.local" class="btn btn-primary" ng-click="model.createRoom()">Create Game</a>
+        <a ng-show="!model.local" class="btn btn-info" ng-click="model.joinRoom()">Join Game</a>
     </div>
 </div>

@@ -27,8 +27,8 @@
             //     confirm('Are you sure to leave the page?') ? 1 : event.preventDefault()
             // })
 
-            socket.emit('join game', currentUser.username)
-            socket.on('joins room', function (username) {
+
+            socket.on('join room', function (username) {
                 console.log(username + ' joins the room')
                 if (username !== currentUser.username) {
                     console.log('sharing share initial data')
@@ -96,6 +96,8 @@
                     _player1: _player1,
                     _player2: _player2
                 }
+
+                socket.emit('game start')
 
                 return gameService
                     .createGame(game)

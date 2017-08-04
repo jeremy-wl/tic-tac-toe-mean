@@ -35,20 +35,31 @@ var io = require('socket.io')(http);
 var socketQueue = []
 
 io.on('connection', function (socket) {
-    socket.on('join game', function (username) {
 
-        if (socketQueue.length === 0) {
-            socket.join(socket.id)
-            socketQueue.push(socket)
-            console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + socket.id)
-        } else {
-            var opponentSocket = socketQueue[0]  // dequeue, now?
-            // var opponentSocket = socketQueue.shift()  // dequeue, now?
-            var room = opponentSocket.id
-            socket.join(room)
-            io.to(room).emit('joins room', username)
-            console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + room)
+    function createRoom(socket) {
+        var room = socket.id
+        socketQueue.push(room)
+    }
+
+    socket.on('create room', function (username) {
+        createRoom(socket)
+        console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + socket.id)
+    })
+
+    socket.on('join room', function (username) {
+        for (var i in socketQueue) {
+            var room = socketQueue[i]
+            var clients = io.sockets.adapter.rooms[room].sockets
+            var numClients = (typeof clients !== 'undefined') ? Object.keys(clients).length : 0;
+            if (numClients === 1) {
+                socket.join(room)
+                console.log('Player (socket id: ' + socket.id + ') named ' + username + ' joins ' + room)
+                io.to(room).emit('join room', username)
+                return
+            }
         }
+        // no room to join, then create one
+        createRoom(socket)
     })
 
     socket.on('share initial data', function (data) {
@@ -66,6 +77,17 @@ io.on('connection', function (socket) {
         io.to(room).emit('getting ready', sharedData)
     })
 
+    socket.on('game start', function (data) {
+        var s = socketQueue.find(function (room) {
+            var clients = io.sockets.adapter.rooms[room].sockets
+            for (var i in clients) {
+                return Object.keys(clients[i] === socket.id)
+            }
+        })
+        var index = socketQueue.indexOf(s)
+        socketQueue.splice(index, 1)
+    })
+
     socket.on('move made', function(moveObj){
         var room = Object.keys(socket.adapter.rooms)[0]
         io.to(room).emit('move made', moveObj)
@@ -73,6 +95,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function(){
         console.log('user disconnected');
+        // remove client from room in the queue (automatically?)
     });
 
 
