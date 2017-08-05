@@ -36,7 +36,7 @@ var socketQueue = []
 
 io.on('connection', function (socket) {
 
-    socket.on('create room', function (username) {
+    socket.on('create room', function (user) {
         // already the only one in the room
 
         var room = socket.room
@@ -44,10 +44,10 @@ io.on('connection', function (socket) {
             var clients = socket.adapter.rooms[room].sockets
             if (Object.keys(clients).length === 1)  return
         }
-        createRoom(socket, username)
+        createRoom(socket, user.username)
     })
 
-    socket.on('join room', function (username) {
+    socket.on('join room', function (user) {
         var flag = false  // there is only 1 room with 1 client, and that room is created by me
         for (var i = 0; i < socketQueue.length; i++) {
             var room = socketQueue[i]
@@ -59,16 +59,16 @@ io.on('connection', function (socket) {
                     continue
                 }
 
-                leaveRoom(socket, username)
-                joinRoom(socket, username, room)
+                leaveRoom(socket, user.username)
+                joinRoom(socket, user.username, room)
 
-                io.to(room).emit('join room', username)
+                io.to(room).emit('join room', user)
                 return
             }
         }
         if (flag) return
         // no room to join, then create one
-        createRoom(socket, username)
+        createRoom(socket, user.username)
     })
 
     socket.on('share initial data', function (data) {

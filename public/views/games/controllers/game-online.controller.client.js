@@ -29,15 +29,16 @@
             // })
 
 
-            socket.on('join room', function (username) {  // 2nd player joins, 1st player creates game
-                console.log(username + ' joins the room')
-                if (username !== currentUser.username) {
+            socket.on('join room', function (user) {  // 2nd player joins, 1st player creates game
+                console.log(user.username + ' joins the room')
+                if (user._id !== currentUser._id) {
 
-                    var _player2 = username
+                    var _player1 = currentUser._id    // 2nd players gets the 2nd turn
+                    var _player2 = user._id
 
                     var game = {
                         grid: model.shared.grid,
-                        _player1: currentUser.username,
+                        _player1: _player1,
                         _player2: _player2
                     }
 
@@ -58,7 +59,6 @@
                 model.shared = data
                 model.gridChanged(data.grid)
 
-                // model.shared.game = data.game
                 startGame(model.shared.grid)
 
                 console.log('synced initialized data')
@@ -79,11 +79,11 @@
         }
 
         function createRoom() {
-            socket.emit('create room', currentUser.username)
+            socket.emit('create room', currentUser)
         }
 
         function joinRoom() {
-            socket.emit('join room', currentUser.username)
+            socket.emit('join room', currentUser)
         }
 
 
