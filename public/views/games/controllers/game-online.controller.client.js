@@ -8,6 +8,7 @@
         model.addSocketIOListeners = addSocketIOListeners
         model.joinRoom = joinRoom
         model.startGame = startGame
+        model.gameInProgress = gameInProgress
         model.makeMove = makeMove
         model.afterMove = afterMove
         model.gridChanged = gridChanged
@@ -18,17 +19,9 @@
 
         function init() {
             model.shared = {
-                grid: 3,
+                grid: 3
             }
-
-            // window.onbeforeunload = function(event) {
-            //     return confirm("Confirm refresh")
-            // };
-
-            // $scope.$on('$routeChangeStart', function(event, next, current) {
-            //     confirm('Are you sure to leave the page?') ? 1 : event.preventDefault()
-            // })
-
+            model.gridChanged(model.shared.grid)
         }
 
         function startGame(grid) {
@@ -40,8 +33,16 @@
             model.dia2 = 0
         }
 
+        function gameInProgress() {
+            return gameHelpers.gameInProgress(model)
+        }
+
         function joinRoom() {
+            gameHelpers.resetGame()
             socket.emit('join room', currentUser)
+            if (!gameHelpers.gameInProgress(model)) {
+                gameHelpers.showMessage(model, 'Waiting for your opponent...')
+            }
         }
 
         /**
@@ -58,7 +59,7 @@
          *    - gameResult (if game end)
          */
         function makeMove(position, isMyTurn) {
-            if (isMyTurn && !model.result && gameHelpers.isValidMove(position)) {
+            if (isMyTurn && gameInProgress() && gameHelpers.moveOnEmptyCell(position)) {
                 var move = {
                     position: position,
                     _player: currentUser._id
@@ -97,9 +98,8 @@
                     socket.emit('game over')
                 }
 
-                var position = move.position
                 var cssClass = move._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
-                $("td[data-move=" + position + "]").addClass(cssClass)
+                $("td[data-move=" + move.position + "]").addClass(cssClass)
 
                 model.isMyTurn = !model.isMyTurn
                 console.log(!model.result ? 'ongoing' : model.result)
@@ -119,8 +119,7 @@
         }
 
         function addSocketIOListeners(socket) {
-            socket.on('join room', function (user) {  // 2nd player joins
-                gameHelpers.resetGame(model)
+            socket.on('game starts', function (user) {  // 2nd player joins
                 console.log(user.username + ' joins the room')
                 if (user._id !== currentUser._id) {   // 1st player creates game
 
@@ -143,15 +142,20 @@
                         })
 
                 } else {
+                    delete model.result
                     model.isMyTurn = 0  // second person gets the second turn
                 }
+
             })
-            socket.on('share initial data', function (data) {
+
+            socket.on('sharing initial data', function (data) {
                 model.shared = data
-                model.gridChanged(data.grid)
+                model.gridChanged(data.grid) // change the table accordingly as its row and col number changes
 
-                startGame(model.shared.grid)
+                startGame(model.shared.grid) // create data structures needed for the game logic
 
+                delete model.result          // remove the previous game result if any
+                gameHelpers.showMessage(model, 'Game starts!')
                 console.log('synced initialized data')
 
             })

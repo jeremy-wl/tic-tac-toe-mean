@@ -4,7 +4,7 @@
         {{model.message}}
     </div>
 
-    <div class="alert alert-success" ng-show="model.result">
+    <div class="alert alert-success" ng-show="model.result && !model.message">
         {{model.result}}
     </div>
 
@@ -17,14 +17,15 @@
         </tr>
     </table>
 
-    <div class="game-settings">
+    <div class="game-settings" ng-show="!model.gameInProgress()">
         <div class="game-settings-grid">
             <label for="grid">Grid</label>
             <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
         </div>
+        <a ng-show="!model.local" class="btn btn-info" ng-click="model.joinRoom()">Join Game</a>
     </div>
 
-    <a ng-show="!model.local" class="btn btn-info" ng-click="model.joinRoom()">Join Game</a>
+    <h1 ng-show="model.isMyTurn && !model.result">Your Turn</h1>
 
 </div>
 

@@ -6,7 +6,8 @@
 
             api.toNumsArray = toNumsArray
             api.resetGame = resetGame
-            api.isValidMove = isValidMove
+            api.gameInProgress = gameInProgress
+            api.moveOnEmptyCell = moveOnEmptyCell
             api.showMessage = showMessage
             api.getOpponentId = getOpponentId
             api.checkWinner = checkWinner
@@ -18,15 +19,18 @@
                 return Array.apply(null, {length: num}).map(Number.call, Number)
             }
 
-            function resetGame(model) {
-                delete model.result
+            function resetGame() {
                 $(".move-made-O, .move-made-X").each(function () {
                     $(this).removeClass("move-made-O")
                     $(this).removeClass("move-made-X")
                 })
             }
 
-            function isValidMove(position) {
+            function gameInProgress(model) {
+                return model.shared.game && !model.result
+            }
+
+            function moveOnEmptyCell(position) {
                 var $cell = $("td[data-move=" + position + "]")
                 return !$cell.hasClass('move-made-X') && !$cell.hasClass('move-made-O')
             }

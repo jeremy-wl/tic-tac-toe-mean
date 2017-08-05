@@ -44,17 +44,14 @@ io.on('connection', function (socket) {
         } else {
             var room = socketQueue[0]
             joinRoom(socket, user.username, room)
+            socketQueue.shift()  // dequeue room
+            io.to(room).emit('game starts', user)
         }
-        io.to(room).emit('join room', user)
     })
 
-    socket.on('share initial data', function (data) {
-
-        removeRoomFromQueue(socket)
-
+    socket.on('share initial data', function (data) {  // data contains: grid, and gameObj returned from db
         var room = socket.id
-
-        io.to(room).emit('share initial data', data)
+        io.to(room).emit('sharing initial data', data)
     })
 
     socket.on('move made', function(moveObj) {
@@ -70,7 +67,6 @@ io.on('connection', function (socket) {
         console.log('Player (socket id: '+ socket.id + ') disconnects');
         // remove client from room in the queue (automatically?)
     });
-
 
     function createRoom(socket, username) {
         // leaveRoom(socket, username)
@@ -91,22 +87,9 @@ io.on('connection', function (socket) {
     }
 
     function joinRoom(socket, username, room) {
-        // if (!socket.room) {
-            console.log('Player ' + username + '                      (' + socket.id + ') joins ' + room)
-        // }
+        console.log('Player ' + username + '                      (' + socket.id + ') joins ' + room)
         socket.join(room)
         socket.room = room
-    }
-
-    function removeRoomFromQueue(socket) {
-        var s = socketQueue.find(function (room) {
-            var clients = socket.adapter.rooms[room].sockets
-            for (var i in clients) {
-                return Object.keys(clients[i] === socket.id)
-            }
-        })
-        var index = socketQueue.indexOf(s)
-        socketQueue.splice(index, 1)
     }
 
 })
