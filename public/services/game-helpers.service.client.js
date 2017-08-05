@@ -18,7 +18,8 @@
                 return Array.apply(null, {length: num}).map(Number.call, Number)
             }
 
-            function resetGame() {
+            function resetGame(model) {
+                delete model.result
                 $(".move-made-O, .move-made-X").each(function () {
                     $(this).removeClass("move-made-O")
                     $(this).removeClass("move-made-X")
@@ -37,8 +38,8 @@
                 }, 2000)
             }
 
-            function getOpponentId(players, currentUserId) {
-                return players[0] === currentUserId ? players[1] : players[0]
+            function getOpponentId(game, currentUserId) {
+                return game._player1 === currentUserId ? game._player2 : game._player1
             }
 
             function checkWinner(model, move, currentUser) {
@@ -58,7 +59,7 @@
 
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    var opponentId = getOpponentId(model.shared.players, currentUser._id)
+                    var opponentId = getOpponentId(model.shared.game, currentUser._id)
                     winner = model.isMyTurn ? currentUser._id : opponentId
                 }
                 // No empty cells left

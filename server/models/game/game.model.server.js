@@ -10,16 +10,20 @@ gameModel.addWinnerToGame = addWinnerToGame
 module.exports = gameModel
 
 function createGame(game) {
+    var gameObj
     return gameModel
         .create(game)
         .then(function (game) {
-            userModel.addGamesToPlayer(game._player1, game._id)
-            if (game._player2) {
-                userModel.addGamesToPlayer(game._player2, game._id)
+            gameObj = game
+            return userModel.addGamesToPlayer(gameObj._player1, gameObj._id)
+        })
+        .then(function () {
+            if (gameObj._player2) {
+                return userModel.addGamesToPlayer(gameObj._player2, gameObj._id)
             }
-            return game
-        }, function (err) {
-            console.log(err)
+        })
+        .then(function () {
+            return gameObj
         })
 }
 

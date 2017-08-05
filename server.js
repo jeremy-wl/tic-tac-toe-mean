@@ -36,39 +36,16 @@ var socketQueue = []
 
 io.on('connection', function (socket) {
 
-    socket.on('create room', function (user) {
-        // already the only one in the room
-
-        var room = socket.room
-        if (room) {
-            var clients = socket.adapter.rooms[room].sockets
-            if (Object.keys(clients).length === 1)  return
-        }
-        createRoom(socket, user.username)
-    })
-
     socket.on('join room', function (user) {
-        var flag = false  // there is only 1 room with 1 client, and that room is created by me
-        for (var i = 0; i < socketQueue.length; i++) {
-            var room = socketQueue[i]
-            var clients = socket.adapter.rooms[room].sockets
-            var numClients = (typeof clients !== 'undefined') ? Object.keys(clients).length : 0
-            if (numClients === 1) {
-                if (room === socket.id) {
-                    flag = true
-                    continue
-                }
+        if (socketQueue.length === 0) {
+            // no room to join, then create one
+            createRoom(socket, user.username)
 
-                leaveRoom(socket, user.username)
-                joinRoom(socket, user.username, room)
-
-                io.to(room).emit('join room', user)
-                return
-            }
+        } else {
+            var room = socketQueue[0]
+            joinRoom(socket, user.username, room)
         }
-        if (flag) return
-        // no room to join, then create one
-        createRoom(socket, user.username)
+        io.to(room).emit('join room', user)
     })
 
     socket.on('share initial data', function (data) {
@@ -80,9 +57,13 @@ io.on('connection', function (socket) {
         io.to(room).emit('share initial data', data)
     })
 
-    socket.on('move made', function(moveObj){
-        var room = Object.keys(socket.adapter.rooms)[0]
+    socket.on('move made', function(moveObj) {
+        var room = socket.room
         io.to(room).emit('move made', moveObj)
+    });
+
+    socket.on('game over', function(data) {  // no data passed
+        socket.leave(socket.room)
     });
 
     socket.on('disconnect', function(socket) {
@@ -92,7 +73,7 @@ io.on('connection', function (socket) {
 
 
     function createRoom(socket, username) {
-        leaveRoom(socket, username)
+        // leaveRoom(socket, username)
 
         var room = socket.id
         socketQueue.push(room)
@@ -110,9 +91,9 @@ io.on('connection', function (socket) {
     }
 
     function joinRoom(socket, username, room) {
-        if (!socket.room) {
+        // if (!socket.room) {
             console.log('Player ' + username + '                      (' + socket.id + ') joins ' + room)
-        }
+        // }
         socket.join(room)
         socket.room = room
     }

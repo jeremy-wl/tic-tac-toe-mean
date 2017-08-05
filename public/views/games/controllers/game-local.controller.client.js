@@ -17,7 +17,7 @@
         }
 
         function startGame(grid) {
-            gameHelpers.resetGame()
+            gameHelpers.resetGame(model)
             model.moves = 0
 
             model.rows = new Array(grid).fill(0)
@@ -27,7 +27,7 @@
 
             var game = {
                 grid: grid,
-                _player1: currentUser.username
+                _player1: currentUser._id
             }
             return gameService
                 .createGame(game)
