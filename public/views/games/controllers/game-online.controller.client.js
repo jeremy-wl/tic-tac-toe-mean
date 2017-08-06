@@ -113,6 +113,7 @@
                 } else {
                     newGrid = 3
                 }
+                gameHelpers.showMessage(model, 'Please enter a number between 3 and 10.')
             }
             model.rowIndex = gameHelpers.toNumsArray(newGrid)
             model.colIndex = gameHelpers.toNumsArray(newGrid)
@@ -126,8 +127,14 @@
                     var _player1 = currentUser._id    // 2nd players gets the 2nd turn
                     var _player2 = user._id
 
+                    var grid = model.shared.grid
+                    if (grid >= 3) grid = grid > 10 ? 10 : grid
+                    else           grid = 3
+
+                    model.shared.grid = grid
+
                     var game = {
-                        grid: model.shared.grid,
+                        grid: grid,
                         _player1: _player1,
                         _player2: _player2
                     }

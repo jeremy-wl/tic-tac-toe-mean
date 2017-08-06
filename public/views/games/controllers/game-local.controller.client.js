@@ -43,7 +43,7 @@
         }
 
         function makeMove(position, isMyTurn) {
-            if (isMyTurn && !model.game.result && gameHelpers.isValidMove(position)) {
+            if (isMyTurn && !model.game.result && gameHelpers.moveOnEmptyCell(position)) {
                 var move = {
                     position: position,
                     _player: currentUser._id

@@ -67,10 +67,27 @@ div > ul > li.list-group-item {
   color: #337ab7;
 }
 
-.move-made-X {
-  background-color: black;
-}
+.table {
 
-.move-made-O {
-  background-color: blue;
+  width: 90%;
+  height: 80vh;
+
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .move-made-X {
+    background-image: url("../images/x.png");
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center;
+  }
+
+  .move-made-O {
+    background-image: url("../images/o.png");
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center;
+  }
+
 }

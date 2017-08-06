@@ -12,7 +12,6 @@
         <tr ng-repeat="i in model.rowIndex">
             <td ng-repeat="j in model.colIndex" data-move="{{i*model.shared.grid+j}}"
                 ng-click="model.makeMove(i*model.shared.grid+j, model.isMyTurn)">
-                row {{i}} col {{j}}
             </td>
         </tr>
     </table>
@@ -27,6 +26,6 @@
 
     <h1 ng-show="model.isMyTurn && !model.result">Your Turn</h1>
 
-</div>
+    {{model}}
 
-{{model}}
+</div>
