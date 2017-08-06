@@ -9,6 +9,7 @@
         <th>Grid</th>
         <th>Result</th>
         <th>Date Created</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +20,11 @@
         <td>{{ game.board.grid }}</td>
         <td>{{ game.result }}</td>
         <td>{{ game.dateCreated | date:'MM/dd/yyyy @ h:mma' }}</td>
+        <td>
+            <a href="#!/games/{{ game._id }}">
+                View Game
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>

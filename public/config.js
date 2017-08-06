@@ -48,8 +48,16 @@
                 }
             })
             .when('/games', {
-                templateUrl: 'views/games/templates/games-list.view.client.html',
+                templateUrl: 'views/games/templates/games-index.view.client.html',
                 controller: 'gamesListController',
+                controllerAs: 'model',
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
+            })
+            .when('/games/:gameId', {
+                templateUrl: 'views/games/templates/games-show.view.client.html',
+                controller: 'gamesShowController',
                 controllerAs: 'model',
                 resolve: {
                     currentUser: checkLoggedIn

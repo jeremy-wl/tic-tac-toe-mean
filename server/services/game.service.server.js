@@ -4,6 +4,7 @@ var gameModel = require('../models/game/game.model.server')
 var userModel = require('../models/user/user.model.server')
 
 app.get   ('/api/users/:userId/games', findAllGamesByUser)
+app.get  ('/api/games/:gameId', findGameById)
 app.get  ('/api/games', findAllGames)
 app.post  ('/api/games', createGame)
 app.post  ('/api/games/:gameId/winner', addWinnerToGame)
@@ -21,6 +22,23 @@ function createGame(req, res) {
             return gameModel.createGame(game)
         }, function (obj) {
             console.log(obj)
+        })
+        .then(function (game) {
+            res.json(game)
+        })
+}
+
+function findGameById(req, res) {
+    var gameId = req.params['gameId']
+    return gameModel
+        .findById(gameId)
+        .populate({
+            path: 'board',
+            model: 'board',
+            populate: {
+                path: 'moves',
+                model: 'move'
+            }
         })
         .then(function (game) {
             res.json(game)

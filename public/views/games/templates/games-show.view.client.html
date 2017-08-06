@@ -1,0 +1,21 @@
+<div ng-include="'views/home/templates/home-navbar.view.client.html'"></div>
+
+<div class="container-fluid">
+
+    <div class="alert alert-success" ng-show="model.result">
+        {{model.result}}
+    </div>
+
+    <table class="table table-bordered table-inverse">
+        <tr ng-repeat="i in model.rowIndex">
+            <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}">
+            </td>
+        </tr>
+    </table>
+
+    <div class="game-settings">
+        <a class="btn btn-default" ng-click="model.prevMove()"><</a>
+        <a class="btn btn-default" ng-click="model.nextMove()">></a>
+    </div>
+
+</div>
