@@ -1,7 +1,9 @@
+<div ng-include="'views/home/templates/home-navbar.view.client.html'"></div>
+
 <div class="container-fluid">
 
-    <div class="alert alert-success" ng-show="model.game.result">
-        {{model.game.result}}
+    <div class="alert alert-success" ng-show="model.result">
+        {{model.result}}
     </div>
 
     <table class="table table-bordered table-inverse">
@@ -13,8 +15,10 @@
         </tr>
     </table>
 
-    <button class="btn btn-block btn-success" ng-click="model.startGame(model.grid)">start</button>
+    <div class="game-settings">
+        <button class="btn btn-md btn-success" ng-click="model.startGame(model.grid)">Start Game</button>
+        <a href="#!/online">Switch to Online Game</a>
+    </div>
 
     {{model}}
 </div>
-

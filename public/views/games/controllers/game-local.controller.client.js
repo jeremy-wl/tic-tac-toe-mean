@@ -5,6 +5,7 @@
 
     function gameLocalController(currentUser, gameService, gameHelpers, moveService) {
         var model = this
+        model.user = currentUser
         model.startGame = startGame
         model.makeMove = makeMove
 
@@ -17,7 +18,8 @@
         }
 
         function startGame(grid) {
-            gameHelpers.resetGame(model)
+            delete model.result
+            gameHelpers.resetGame()
             model.moves = 0
 
             model.rows = new Array(grid).fill(0)
@@ -43,7 +45,7 @@
         }
 
         function makeMove(position, isMyTurn) {
-            if (isMyTurn && !model.game.result && gameHelpers.moveOnEmptyCell(position)) {
+            if (isMyTurn && !model.result && gameHelpers.moveOnEmptyCell(position)) {
                 var move = {
                     position: position,
                     _player: currentUser._id
@@ -90,21 +92,21 @@
                 // Someone wins
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    model.game.result = model.isMyTurn ? 'You win!' : 'You lose!'
+                    model.result = model.isMyTurn ? 'You win!' : 'You lose!'
                     var winner = model.isMyTurn ? 1 : 3
                     return gameService
                         .addWinnerToGame(model.game, winner)
                         .then(function (game) {
-                            return model.game.result  // if it is my turn, i win; otherwise, robot wins (i lose)
+                            return model.result  // if it is my turn, i win; otherwise, robot wins (i lose)
                         })
                 }
-                // No empty cells left                     // in a local game, if
-                if (model.moves === n * n) {               // - I     win: winner = 1
-                    model.game.result = "It's a tie."      // - robot win: winner = 3
-                    return gameService                     // - tie      : winner = 0
+                // No empty cells left                // in a local game, if
+                if (model.moves === n * n) {          // - I     win: winner = 1
+                    model.result = "It's a tie."      // - robot win: winner = 3
+                    return gameService                // - tie      : winner = 0
                         .addWinnerToGame(model.game, 0)
                         .then(function (game) {
-                            return model.game.result
+                            return model.result
                         })
                 }
                 model.isMyTurn = !model.isMyTurn

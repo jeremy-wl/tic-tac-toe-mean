@@ -1,3 +1,5 @@
+<div ng-include="'views/home/templates/home-navbar.view.client.html'"></div>
+
 <div class="container-fluid">
 
     <div class="alert alert-info" ng-show="model.message">
@@ -16,13 +18,18 @@
         </tr>
     </table>
 
-    <div class="game-settings" ng-show="!model.gameInProgress()">
-        <div class="game-settings-grid">
-            <label for="grid">Grid</label>
-            <input id="grid" type="number" ng-model="model.shared.grid" ng-change="model.gridChanged(model.shared.grid)">
+    <form class="form-inline game-settings" ng-show="!model.gameInProgress()">
+        <label class="sr-only" for="grid">Grid</label>
+        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+            <div class="input-group-addon">Grid</div>
+            <input id="grid" type="number" class="form-control" ng-model="model.shared.grid"
+                   ng-change="model.gridChanged(model.shared.grid)">
+            <div class="input-group-addon join-game" ng-click="model.joinRoom()">
+                <a ng-show="!model.local">Join Game</a>
+            </div>
         </div>
-        <a ng-show="!model.local" class="btn btn-info" ng-click="model.joinRoom()">Join Game</a>
-    </div>
+        <a href="#!/local">Switch to Local Game</a>
+    </form>
 
     <h1 ng-show="model.isMyTurn && !model.result">Your Turn</h1>
 

@@ -6,7 +6,7 @@
     function gamesListController(currentUser, gameService, $timeout) {
         var model = this
         model.getGamesInfo = getGamesInfo
-
+        model.user = currentUser
 
         init()
 

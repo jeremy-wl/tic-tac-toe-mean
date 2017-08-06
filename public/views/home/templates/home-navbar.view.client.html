@@ -9,7 +9,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand">CS 5610 - Web Development</span>
+            <a href="#!/">
+                <span class="navbar-brand">Tic-Tac-Toe</span>
+            </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -31,14 +33,16 @@
                 </li>
 
                 <li ng-show="model.user">
-                    <a href="#!/games">{{ model.isAdmin(model.user) ? 'All' : '' }} Game History</a>
+                    <a href="#!/games">{{ model.user && model.user.roles.indexOf('ADMIN') >= 0 ? 'All' : '' }}
+                        Game History
+                    </a>
                 </li>
 
                 <li ng-show="model.user">
                     <a ng-click="model.logout()">Logout</a>
                 </li>
 
-                <li ng-if="model.isAdmin(model.user)">
+                <li ng-if="model.user && model.user.roles.indexOf('ADMIN') >= 0">
                     <a href="#!/admin">Admin Portal</a>
                 </li>
             </ul>

@@ -1,18 +1,36 @@
 body {
-  padding: 80px 10px 60px 10px;
+  padding: 60px 10px 60px 10px;
 }
 
 .form-element-margin input, textarea {
   margin-bottom: 5px;
 }
 
-a:hover{
+a:hover {
   text-decoration: none;
 }
 
-a[ng-click]:hover {
-  cursor: hand;
-  cursor: pointer;
+ul.nav > li {
+  a[href], a[href]:hover, a[ng-click], a[ng-click]:hover {
+    cursor: hand;
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+.game-settings {
+  text-align: center;
+}
+
+div.input-group-addon.join-game {
+  a {
+    color: white;
+  }
+  a:hover {
+    cursor: hand;
+    cursor: pointer;
+  }
+  background-color: #5cb85c;
 }
 
 li:not(:first-child):hover {
@@ -21,14 +39,6 @@ li:not(:first-child):hover {
 
 .navbar-blue {
   background-color: #337ab7;
-}
-
-.navbar-gray {
-  background-color: #F9F9F9;
-}
-
-.btn-gray {
-  background-color: #DCDAD1;
 }
 
 .text-white {
@@ -43,40 +53,15 @@ li:not(:first-child):hover {
   color: #777777;
 }
 
-.text-bold {
-  font-weight: bold;
-}
-
-.text-blue {
-  color: #337ab7;
-}
-
 .disabled {
   cursor: not-allowed;
 }
 
-.icon-padding {
-  padding-left: 1.5%;
-  padding-right: 1.5%;
-}
-
-.vertical-divider-right {
-  border-right: 1px solid #cccccc;
-  height: 100%;
-  margin-top: -20px;
-  position: absolute;
-}
-
-div > ul > li.list-group-item {
-  color: #337ab7;
-}
-
 .table.table-bordered.table-inverse {
 
-  width: 90%;
-  height: 80vh;
+  width: 95%;
+  height: 65vh;
 
-  margin-top: 60px;
   margin-left: auto;
   margin-right: auto;
 

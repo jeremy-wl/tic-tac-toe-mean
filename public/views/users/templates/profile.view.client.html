@@ -1,6 +1,9 @@
 <nav class="navbar navbar-fixed-top navbar-blue">
     <div class="container-fluid">
         <div class="text-white navbar-brand text-bold">
+            <a href="#!/" class="text-white">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
             Profile
         </div>
         <a class="navbar-link navbar-text pull-right text-white" ng-click="model.updateUser(model.user._id, model.user)">
@@ -23,7 +26,6 @@
        <input type="text" class="form-control" placeholder="last name" id="lName" ng-model="model.user.lastName">
    </form>
 
-    <a href="#!/website" class="btn btn-primary btn-block">Websites</a>
     <a class="btn btn-danger btn-block" ng-click="model.logout()">Logout</a>
     <a class="btn btn-danger btn-block" ng-click="model.unregisterUser()">Destroy Account</a>
 </div>

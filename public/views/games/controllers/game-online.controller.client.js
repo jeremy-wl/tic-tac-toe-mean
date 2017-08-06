@@ -5,6 +5,7 @@
 
     function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
         var model = this
+        model.user = currentUser
         model.addSocketIOListeners = addSocketIOListeners
         model.joinRoom = joinRoom
         model.startGame = startGame
