@@ -5,7 +5,8 @@
         <th>Player 1</th>
         <th>Player 2</th>
         <th>Grid</th>
-        <th>Winner</th>
+        <th>Result</th>
+        <th>Date Created</th>
     </tr>
     </thead>
     <tbody>
@@ -14,7 +15,8 @@
         <td>{{ game._player1.username }}</td>
         <td>{{ game._player2.username == null ? 'Computer' : game._player2.username}}</td>
         <td>{{ game.board.grid }}</td>
-        <td>{{ game._winner }}</td>
+        <td>{{ game.result }}</td>
+        <td>{{ game.dateCreated | date:'MM/dd/yyyy @ h:mma' }}</td>
     </tr>
     </tbody>
 </table>

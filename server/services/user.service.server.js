@@ -131,8 +131,7 @@ app.get('/auth/facebook',               // redirects to Facebook, asking for pro
     }))
 app.get('/auth/facebook/callback',      // Facebook will call this url back and redirect for success/failure
     passport.authenticate('facebook', {
-        // successRedirect: '/index.html#!/', TODO: change back to this
-        successRedirect: '/index.html#!/online',
+        successRedirect: '/index.html#!/',
         failureRedirect: '/index.html#!/login'
     }))
 
