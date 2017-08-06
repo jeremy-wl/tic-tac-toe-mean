@@ -13,9 +13,12 @@ var gameSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    _winner: String,                            // if robot wins, _winner = 'robot'
-    board: {                                    // if it's a tie, _winner = 'tie'
-        type: mongoose.Schema.Types.ObjectId,   // otherwise, _winner = the string representation of the playerId
+    _winner: {                     //   in a local game, if             in an online game, if
+        type: Number,              // - I (player1) wins: winner = 1   - player1 wins: winner = 1
+        enum: [0,1,2,3]  // - robot       wins: winner = 3   - player2 wins: winner = 2
+    },                             // - ties:             winner = 0   - ties:         winner = 0
+    board: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'board'
     }
 })

@@ -94,8 +94,15 @@
                 var winner = move.winner
 
                 if (winner) {
-                    if (winner !== 'tie') model.result = move.winner === currentUser._id ? 'You win :)' : 'You lose :('
-                    else                  model.result = "It's a tie."
+                    if (winner === 0) model.result = "It's a tie."
+                    else {
+                        if (winner === 1 && currentUser._id === model.shared.game._player1 ||
+                            winner === 2 && currentUser._id === model.shared.game._player2) {
+                            model.result = 'You win :)'
+                        } else {
+                            model.result = 'You lose :('
+                        }
+                    }
                     socket.emit('game over')
                 }
 
