@@ -4,7 +4,7 @@ var userSchema = mongoose.Schema({
     roles: [{
        type: String,
        default: 'PLAYER',
-       enum: ['PLAYER', 'ADMIN', 'ROBOT']
+       enum: ['PLAYER', 'ADMIN']
     }],
     username: {
         type: String,
@@ -31,7 +31,7 @@ var userSchema = mongoose.Schema({
     },
     games: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'gameModel'
+        ref: 'game'
     }]
 })
 

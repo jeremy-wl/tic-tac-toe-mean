@@ -1,9 +1,20 @@
-<h3>#home</h3>
+<div ng-include="'views/home/templates/home-navbar.view.client.html'"></div>
 
 <div class="container-fluid">
-    <a class="btn btn-success" href="#!/local">Local Game</a> <br><br><br>
-
-    <div>
-        <a class="btn btn-primary" href="#!/online">Online Game</a>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1 href="views/user/login.view.client.html">Final Project for CS 5610</h1>
+            <div>
+                <p>Login with an admin user <code>(u: admini, p: admini)</code> to check out the admin console</p>
+                <a class="btn btn-primary" href="https://webdev-wenlin.herokuapp.com/assignment/index.html#!/">
+                    View on Heroku
+                </a>
+            </div>
+        </div>
     </div>
+
+
+    <a class="btn btn-success" href="#!/local">Local Game</a>
+    <a class="btn btn-primary" href="#!/online">Online Game</a>
+
 </div>

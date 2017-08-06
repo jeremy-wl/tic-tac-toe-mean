@@ -1,6 +1,6 @@
-//body {
-//  padding: 80px 10px 60px 10px;
-//}
+body {
+  padding: 80px 10px 60px 10px;
+}
 
 .form-element-margin input, textarea {
   margin-bottom: 5px;
@@ -13,6 +13,10 @@ a:hover{
 a[ng-click]:hover {
   cursor: hand;
   cursor: pointer;
+}
+
+li:not(:first-child):hover {
+  background-color: #E7E7E7;
 }
 
 .navbar-blue {
@@ -67,7 +71,7 @@ div > ul > li.list-group-item {
   color: #337ab7;
 }
 
-.table {
+.table.table-bordered.table-inverse {
 
   width: 90%;
   height: 80vh;

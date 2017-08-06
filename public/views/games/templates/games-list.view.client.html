@@ -1,0 +1,20 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Player 1</th>
+        <th>Player 2</th>
+        <th>Grid</th>
+        <th>Winner</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="game in model.games track by $index">
+        <th scope="row">{{ $index }}</th>
+        <td>{{ game._player1.username }}</td>
+        <td>{{ game._player2.username == null ? 'Computer' : game._player2.username}}</td>
+        <td>{{ game.board.grid }}</td>
+        <td>{{ game._winner }}</td>
+    </tr>
+    </tbody>
+</table>

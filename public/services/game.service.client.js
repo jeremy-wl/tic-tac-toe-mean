@@ -4,6 +4,8 @@
         .factory("gameService", function ($location, $http, moveService) {
             var api = {}
 
+            api.findAllGames = findAllGames
+            api.findAllGamesByUser = findAllGamesByUser
             api.createGame = createGame
             api.robotMove = robotMove
             api.addWinnerToGame = addWinnerToGame
@@ -13,6 +15,22 @@
             function createGame(game) {
                 var url = '/api/games'
                 return $http.post(url, game)
+                    .then(function (res) {
+                        return res.data
+                    })
+            }
+
+            function findAllGamesByUser(userId) {
+                var url = '/api/users/' + userId + '/games'
+                return $http.get(url)
+                    .then(function (res) {
+                        return res.data
+                    })
+            }
+
+            function findAllGames() {
+                var url = '/api/games'
+                return $http.get(url)
                     .then(function (res) {
                         return res.data
                     })
