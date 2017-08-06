@@ -60,13 +60,14 @@
          */
         function makeMove(position, isMyTurn) {
             if (isMyTurn && gameInProgress() && gameHelpers.moveOnEmptyCell(position)) {
+                model.isMyTurn = !model.isMyTurn
                 var move = {
                     position: position,
                     _player: currentUser._id
                 }
                 return moveService
                     .makeMove(move, model.shared.game.board)
-                    .then(function (move) {  // TODO: check anyone wins
+                    .then(function (move) {
                         var winner = gameHelpers.checkWinner(model, move, currentUser)
                         if (winner) {
                             return gameService
@@ -101,7 +102,10 @@
                 var cssClass = move._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
                 $("td[data-move=" + move.position + "]").addClass(cssClass)
 
-                model.isMyTurn = !model.isMyTurn
+                if (move._player !== currentUser._id) {  // the other player's turn is already flipped RIGHT AFTER
+                    model.isMyTurn = !model.isMyTurn     // he makes the move; otherwise, the network delay may
+                }                                        // enable him to quickly make move multiple times
+
                 console.log(!model.result ? 'ongoing' : model.result)
             }
         }

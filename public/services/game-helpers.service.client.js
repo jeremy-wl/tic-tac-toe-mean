@@ -49,7 +49,7 @@
             function checkWinner(model, move, currentUser) {
                 var n = model.shared.grid,
                     i = Math.floor(move.position/n), j = move.position % n,
-                    val = model.isMyTurn ? 1 : -1
+                    val = currentUser._id === model.shared.game._player1 ? 1 : -1
 
                 model.rows[i] += val
                 model.cols[j] += val
@@ -63,12 +63,9 @@
 
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    var opponentId = getOpponentId(model.shared.game, currentUser._id)
-                    winner = model.isMyTurn ? currentUser._id : opponentId
-                }
-                // No empty cells left
-                else if (model.moves === n * n - 1) {  // total moves becomes n² after this move
-                    winner = 'tie'
+                    winner = currentUser._id
+                } else if (model.moves === n * n - 1) {  // total moves becomes n² after this move
+                    winner = 'tie'                       // No empty cells left
                 }
 
                 return winner
