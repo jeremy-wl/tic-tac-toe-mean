@@ -6,18 +6,24 @@
         {{model.result}}
     </div>
 
-    <table class="table table-bordered table-inverse">
-        <tr ng-repeat="i in model.rowIndex">
-            <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}"
-                ng-click="model.makeMove(i*model.grid+j, model.isMyTurn)">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-bordered table-inverse">
+                <tr ng-repeat="i in model.rowIndex">
+                    <td ng-repeat="j in model.colIndex" data-move="{{i*model.grid+j}}"
+                        ng-click="model.makeMove(i*model.grid+j, model.isMyTurn)">
 
-            </td>
-        </tr>
-    </table>
+                    </td>
+                </tr>
+            </table>
 
-    <div class="game-settings">
-        <button class="btn btn-md btn-success" ng-click="model.startGame(model.grid)">Start Game</button>
-        <a href="#!/online">Switch to Online Game</a>
+            <div class="game-settings">
+                <button class="btn btn-md btn-success" ng-click="model.startGame(model.grid)">Start Game</button>
+                <a href="#!/online">Switch to Online Game</a>
+            </div>
+        </div>
+
+        <div ng-include="'views/games/templates/game-msgbox.view.client.html'"></div>
     </div>
 
     {{model}}

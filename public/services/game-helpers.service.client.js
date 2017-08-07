@@ -8,7 +8,9 @@
             api.resetGame = resetGame
             api.gameInProgress = gameInProgress
             api.moveOnEmptyCell = moveOnEmptyCell
-            api.showMessage = showMessage
+            api.popMessage = popMessage
+            api.appendMessage = appendMessage
+            api.xORo = xORo
             api.getOpponentId = getOpponentId
             api.checkWinner = checkWinner
 
@@ -35,8 +37,22 @@
                 return !$cell.hasClass('move-made-X') && !$cell.hasClass('move-made-O')
             }
 
-            function showMessage(model, message) {
+            function appendMessage(message) {
+                $('li.list-group-item.active').removeClass('active')
+                message = '<li class="list-group-item active">' + 'System: ' +  // appending sys msg to msgbox
+                    message                                                     // with an active (highlighted) state
+                '</li>'
+                var cssSelector = 'div.col-md-6 > ul'
+                $messageBox = $(cssSelector)
+                $messageBox.append(message)
+
+                var messageBox = document.querySelector(cssSelector);  // for the div with scrollbar,
+                messageBox.scrollTop = messageBox.scrollHeight;        // automatically scroll it to the bottom
+            }
+
+            function popMessage(model, message) {
                 model.message = message
+                appendMessage(message)
                 window.setTimeout(function () {
                     delete model.message
                 }, 2000)
@@ -69,6 +85,12 @@
                 }
 
                 return winner
+            }
+
+            function xORo(movePlayerId, currentUserId, player1Id) {
+                var xORO = movePlayerId === player1Id ? 'X' : 'O'
+                var who = currentUserId === movePlayerId ? ' (You)     ' : ' (Opponent)'
+                return xORO + who
             }
 
         })

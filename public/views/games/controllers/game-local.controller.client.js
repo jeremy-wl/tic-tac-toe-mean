@@ -39,7 +39,7 @@
                     if (!model.isMyTurn) {
                         return gameService
                             .robotMove(game)
-                            .then(moved(model))
+                            .then(afterMove(model))
                     }
                 })
         }
@@ -52,7 +52,7 @@
                 }
                 return moveService
                     .makeMove(move, model.game.board)
-                    .then(moved(model))
+                    .then(afterMove(model))
                     .then(function (gameResult) {
                         console.log(gameResult)
                         if (model.moves < 9) {
@@ -61,7 +61,7 @@
                             throw "Already made last move!"
                         }
                     })
-                    .then(moved(model))
+                    .then(afterMove(model))
                     .then(function (gameResult) {
                         console.log(gameResult)
                     })
@@ -72,13 +72,23 @@
 
         }
 
-        function moved(model) {
+        function afterMove(model) {
             return function (move) {
                 var position = move.position
                 var cssClass = model.isMyTurn ? 'move-made-X' : 'move-made-O'
                 $("td[data-move=" + position + "]").addClass(cssClass)
                 model.moves++
 
+                // Appending move message to message box
+
+                var currentPlayer = move._player === currentUser._id ? currentUser : {}
+                var xORo = gameHelpers.xORo(currentPlayer._id, currentUser._id, model.game._player1)
+                var row = Math.floor(position / model.grid) + 1,
+                    col = Math.floor(position % model.grid) + 1;
+                var message = xORo + ' made a move at Row ' + (row) + ', Column ' + col
+                gameHelpers.appendMessage(message)
+
+                // Manipulating game data structures for game result check
                 var n = model.grid,
                     i = Math.floor(position/n), j = position % n,
                     val = model.isMyTurn ? 1 : -1
@@ -110,6 +120,7 @@
                         })
                 }
                 model.isMyTurn = !model.isMyTurn
+
                 return 'ongoing'
             }
         }

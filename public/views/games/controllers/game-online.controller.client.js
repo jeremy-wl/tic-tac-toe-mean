@@ -42,7 +42,7 @@
             gameHelpers.resetGame()
             socket.emit('join room', currentUser)
             if (!gameHelpers.gameInProgress(model)) {
-                gameHelpers.showMessage(model, 'Waiting for your opponent...')
+                gameHelpers.popMessage(model, 'Waiting for your opponent...')
             }
         }
 
@@ -93,6 +93,7 @@
                 model.moves++
 
                 var winner = move.winner
+                var position = move.position
 
                 if (winner) {
                     if (winner === 0) model.result = "It's a tie."
@@ -108,11 +109,17 @@
                 }
 
                 var cssClass = move._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
-                $("td[data-move=" + move.position + "]").addClass(cssClass)
+                $("td[data-move=" + position + "]").addClass(cssClass)
 
                 if (move._player !== currentUser._id) {  // the other player's turn is already flipped RIGHT AFTER
                     model.isMyTurn = !model.isMyTurn     // he makes the move; otherwise, the network delay may
                 }                                        // enable him to quickly make move multiple times
+
+                var xORo = gameHelpers.xORo(move._player, currentUser._id, model.shared.game._player1)
+                var row = Math.floor(position / model.shared.grid) + 1,
+                    col = Math.floor(position % model.shared.grid) + 1;
+                var message = xORo + ' made a move at Row ' + (row) + ', Column ' + col
+                gameHelpers.appendMessage(message)
 
                 console.log(!model.result ? 'ongoing' : model.result)
             }
@@ -125,7 +132,7 @@
                 } else {
                     newGrid = 3
                 }
-                gameHelpers.showMessage(model, 'Please enter a number between 3 and 10.')
+                gameHelpers.popMessage(model, 'Please enter a number between 3 and 10.')
             }
             model.rowIndex = gameHelpers.toNumsArray(newGrid)
             model.colIndex = gameHelpers.toNumsArray(newGrid)
@@ -174,7 +181,7 @@
                 startGame(model.shared.grid) // create data structures needed for the game logic
 
                 delete model.result          // remove the previous game result if any
-                gameHelpers.showMessage(model, 'Game starts!')
+                gameHelpers.popMessage(model, 'Game starts!')
                 console.log('synced initialized data')
 
             })

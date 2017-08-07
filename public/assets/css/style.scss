@@ -33,7 +33,7 @@ div.input-group-addon.join-game {
   background-color: #5cb85c;
 }
 
-li:not(:first-child):hover {
+nav.navbar ul > li:not(:first-child):hover, .col-md-6 > ul > li:hover {
   background-color: #E7E7E7;
 }
 
@@ -78,5 +78,18 @@ li:not(:first-child):hover {
     background-size: 80% 80%;
     background-position: center;
   }
+
+}
+
+div.col-md-6 {
+    ul {
+      width: 95%;
+      height: 65vh;
+      overflow: auto;
+
+      li {
+        overflow-y: scroll;
+      }
+    }
 
 }
