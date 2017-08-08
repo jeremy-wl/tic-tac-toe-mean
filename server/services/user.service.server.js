@@ -25,15 +25,18 @@ var bcrypt = require("bcrypt-nodejs")
 
 /****************************** URL Endpoints *********************************/
 
-app.get   ('/api/user', findUserByCredentials)
+app.get   ('/api/users', findUserByCredentials)
 app.post  ('/api/login', passport.authenticate('local'), login)
 app.post  ('/api/logout', logout)
 app.get   ('/api/checkLoggedIn', checkLoggedIn)
+app.get   ('/api/checkAdmin', checkAdmin)
 
-app.get   ('/api/user/:userId', findUserById)
-app.post  ('/api/user', registerUser)
-app.delete('/api/user/:userId', unregisterUser)
-app.put   ('/api/user/:userId', updateUser)
+app.get   ('/api/users/:userId', findUserById)
+app.post  ('/api/users', registerUser)
+app.delete('/api/users/:userId', unregisterUser)
+app.put   ('/api/users/:userId', updateUser)
+
+app.get   ('/api/admin/users', isAdmin, findAllUsers)
 
 /****************************** Local Strategy *********************************/
 
@@ -188,6 +191,18 @@ function checkLoggedIn(req, res) {
     res.send(req.isAuthenticated() ? req.user : '0')  // isAuthenticated() is a convenient function that checks
 }                                                     // if passport has already authenticated the user in the session
 
+function checkAdmin(req, res) {
+    res.send(req.isAuthenticated() && req.user.roles.indexOf('ADMIN') >= 0 ? req.user : '0')
+}
+
+function isAdmin(req, res, next) {
+    if (req.isAuthenticated() && req.user.roles.indexOf('ADMIN') >= 0) {
+        next()
+    } else {
+        res.sendStatus(401)
+    }
+}
+
 function findUserByCredentials(req, res) {
     var username = req.query['username']
     if (username) {
@@ -255,5 +270,13 @@ function updateUser(req, res) {
             res.send(status)
         }, function (obj) {
             res.status(403).send(obj.errors)
+        })
+}
+
+function findAllUsers(req, res) {
+    userModel
+        .findAllUsers()
+        .then(function (users) {
+            res.json(users)
         })
 }

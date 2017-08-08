@@ -82,14 +82,28 @@ nav.navbar ul > li:not(:first-child):hover, .col-md-6 > ul > li:hover {
 }
 
 div.col-md-6 {
-    ul {
-      width: 95%;
-      height: 65vh;
-      overflow: auto;
+  ul {
+    width: 95%;
+    height: 65vh;
+    overflow: auto;
 
-      li {
-        overflow-y: scroll;
-      }
+    li {
+      overflow-y: scroll;
     }
+  }
+}
 
+tr {
+  td, th {
+    text-align: center;
+  }
+}
+
+.crud-icon {
+  text-align: center;
+  font-size: 2px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }

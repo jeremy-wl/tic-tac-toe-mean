@@ -32,6 +32,11 @@
                     <a href="#!/profile">Profile</a>
                 </li>
 
+
+                <li ng-show="model.user && model.user.roles.indexOf('ADMIN') >= 0">
+                    <a href="#!/users">All Users</a>
+                </li>
+
                 <li ng-show="model.user">
                     <a href="#!/games">{{ model.user && model.user.roles.indexOf('ADMIN') >= 0 ? 'All' : '' }}
                         Game History

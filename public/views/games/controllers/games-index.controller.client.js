@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('gamesListController', gamesListController)
 
-    function gamesListController(currentUser, gameService, $timeout) {
+    function gamesListController(currentUser, gameService, $routeParams, $location, $timeout) {
         var model = this
         model.getGamesInfo = getGamesInfo
         model.user = currentUser
@@ -11,13 +11,20 @@
         init()
 
         function init() {
-            getGamesInfo()
+            var userId = $routeParams['userId']
+            getGamesInfo(userId)
         }
 
-        function getGamesInfo() {
-            var promise = isAdmin(currentUser) ?
-                gameService.findAllGames() :
-                gameService.findAllGamesByUser(currentUser._id)
+        function getGamesInfo(userId) {
+            var promise
+
+            if (isAdmin(currentUser) && !userId) {
+                promise = gameService.findAllGames()
+            } else {
+                if (!userId)  userId = currentUser._id
+                promise = gameService.findAllGamesByUser(userId)
+            }
+
             return promise
                 .then(function (games) {
                     games.forEach(function (game) {
@@ -38,6 +45,10 @@
                         $('td:contains(Lost)').css('color', 'red')
                         $('td:contains(Ties)').css('color', 'blue')
                     })
+                })
+                .catch(function (err) {
+                    console.log(err)
+                    $location.url('/')
                 })
         }
 

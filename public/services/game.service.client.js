@@ -34,6 +34,8 @@
                 return $http.get(url)
                     .then(function (res) {
                         return res.data
+                    }, function (res) {
+                        throw res.data
                     })
             }
 

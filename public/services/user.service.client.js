@@ -9,15 +9,17 @@
             api.validateCredentials = validateCredentials
             api.findUserById = findUserById
             api.findUserByUserName = findUserByUserName
+            api.findAllUsers = findAllUsers
             api.login = login
             api.logout = logout
             api.updateUser = updateUser
             api.checkLoggedIn = checkLoggedIn
+            api.checkAdmin = checkAdmin
 
             return api
 
             function registerUser(user) {
-                var url = '/api/user'
+                var url = '/api/users'
                 return $http.post(url, user)
                     .then(function (response) {
                         return response.data
@@ -25,7 +27,7 @@
             }
 
             function unregisterUser(userId) {
-                var url = '/api/user/' + userId
+                var url = '/api/users/' + userId
                 return $http.delete(url)
                     .then(function (response) {
                         return response.data
@@ -33,19 +35,27 @@
             }
 
             function findUserById(userId) {
-                var url = '/api/user/' + userId
+                var url = '/api/users/' + userId
                 return $http.get(url).then(function (response) {  // returns a promise object to controller
                     return response.data  // the user object (success) or error
                 })
             }
 
             function findUserByUserName(username) {
-                var url = '/api/user?username=' + username
+                var url = '/api/users?username=' + username
                 return $http.get(url)
                     .then(function (response) {
                         if (response.data.error) {  // 若返回的数据中包含在 server 添加的 error 信息
                             throw response.data     // 则作为一个 error throw 给 register controller 让他 catch
                         }                           // 然后作为 model.error render 在页面上
+                        return response.data
+                    })
+            }
+
+            function findAllUsers() {
+                var url = '/api/admin/users'
+                return $http.get(url)
+                    .then(function (response) {
                         return response.data
                     })
             }
@@ -70,7 +80,7 @@
             }
 
             function updateUser(userId, updatedUser) {
-                var url = '/api/user/' + userId
+                var url = '/api/users/' + userId
                 return $http.put(url, updatedUser)
                     .then(function (response) {
                         return response.data
@@ -86,6 +96,14 @@
                     .then(function (response) {  // will response back either
                         return response.data     // - currentUser
                     })                           // - '0'
+            }
+
+            function checkAdmin() {
+                var url = '/api/checkAdmin'
+                return $http.get(url)
+                    .then(function (response) {
+                        return response.data
+                    })
             }
 
             function validateCredentials(username, password, passwordConfirm) {

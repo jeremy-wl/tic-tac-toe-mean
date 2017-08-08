@@ -3,9 +3,9 @@ var boardModel = require('../models/board/board.model.server')
 var gameModel = require('../models/game/game.model.server')
 var userModel = require('../models/user/user.model.server')
 
-app.get   ('/api/users/:userId/games', findAllGamesByUser)
+app.get   ('/api/users/:userId/games', isAuthorizedUser, findAllGamesByUser)
 app.get  ('/api/games/:gameId', findGameById)
-app.get  ('/api/games', findAllGames)
+app.get  ('/api/games', isAuthorizedUser, findAllGames)
 app.post  ('/api/games', createGame)
 app.post  ('/api/games/:gameId/winner', addWinnerToGame)
 
@@ -80,4 +80,13 @@ function addWinnerToGame(req, res) {
         .then(function (game) {
             res.json(game)
         })
+}
+
+function isAuthorizedUser(req, res, next) {
+    if (req.isAuthenticated() &&
+       (req.user.roles.indexOf('ADMIN') >= 0 || req.user._id.toString() === req.params['userId'])) {
+        next()
+    } else {
+        res.sendStatus(401)
+    }
 }
