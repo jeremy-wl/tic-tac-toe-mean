@@ -95,11 +95,11 @@
                 var winner = move.winner
                 var position = move.position
 
-                if (winner) {
-                    if (winner === 0) model.result = "It's a tie."
+                if (winner) {  // if winner is set to 0 instead of '0', since 0 is falsy, it will not enter if block
+                    if (winner === '0') model.result = "It's a tie."
                     else {
-                        if (winner === 1 && currentUser._id === model.shared.game._player1 ||
-                            winner === 2 && currentUser._id === model.shared.game._player2) {
+                        if (winner === '1' && currentUser._id === model.shared.game._player1 ||
+                            winner === '2' && currentUser._id === model.shared.game._player2) {
                             model.result = 'You win :)'
                         } else {
                             model.result = 'You lose :('

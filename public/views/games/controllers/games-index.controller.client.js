@@ -28,11 +28,11 @@
             return promise
                 .then(function (games) {
                     games.forEach(function (game) {
-                        if      (game._winner === 0)  game.result = 'Ties'
-                        else if (game._winner === 3)  game.result = 'Lost'  // lost to robot
+                        if      (game._winner === '0')  game.result = 'Ties'
+                        else if (game._winner === '3')  game.result = 'Lost'  // lost to robot
                         else {
-                            if (game._winner === 1 && currentUser._id === game._player1._id ||
-                                game._winner === 2 && currentUser._id === game._player2._id)
+                            if (game._winner === '1' && currentUser._id === game._player1._id ||
+                                game._winner === '2' && currentUser._id === game._player2._id)
                                 game.result = 'Wins'
                             else
                                 game.result = 'Lost'

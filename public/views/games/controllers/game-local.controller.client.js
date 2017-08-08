@@ -103,7 +103,7 @@
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
                     model.result = model.isMyTurn ? 'You win!' : 'You lose!'
-                    var winner = model.isMyTurn ? 1 : 3
+                    var winner = model.isMyTurn ? '1' : '3'
                     return gameService
                         .addWinnerToGame(model.game, winner)
                         .then(function (game) {
@@ -111,9 +111,9 @@
                         })
                 }
                 // No empty cells left                // in a local game, if
-                if (model.moves === n * n) {          // - I     win: winner = 1
-                    model.result = "It's a tie."      // - robot win: winner = 3
-                    return gameService                // - tie      : winner = 0
+                if (model.moves === n * n) {          // - I     win: winner = '1'
+                    model.result = "It's a tie."      // - robot win: winner = '3'
+                    return gameService                // - tie      : winner = '0'
                         .addWinnerToGame(model.game, 0)
                         .then(function (game) {
                             return model.result

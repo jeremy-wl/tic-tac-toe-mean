@@ -79,9 +79,9 @@
 
                 if (Math.abs(model.rows[i]) === n || Math.abs(model.dia1) === n ||
                     Math.abs(model.cols[j]) === n || Math.abs(model.dia2) === n) {
-                    winner = currentUser._id === model.shared.game._player1 ? 1 : 2
-                } else if (model.moves === n * n - 1) {  // total moves becomes n² after this move
-                    winner = 0                           // the game ties, no empty cells left
+                    winner = currentUser._id === model.shared.game._player1 ? '1' : '2'
+                } else if (model.moves === n * n - 1) {    // total moves becomes n² after this move
+                    winner = '0'                           // the game ties, no empty cells left
                 }
 
                 return winner
