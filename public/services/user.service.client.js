@@ -14,6 +14,7 @@
             api.logout = logout
             api.upsertUser = upsertUser
             api.updateUser = updateUser
+            api.deleteUser = deleteUser
             api.checkLoggedIn = checkLoggedIn
             api.checkAdmin = checkAdmin
 
@@ -99,6 +100,14 @@
                     })
                     .catch(function (response) {
                         throw response
+                    })
+            }
+
+            function deleteUser(userId) {
+                var url = '/api/admin/users/' + userId
+                return $http.delete(url)
+                    .then(function (response) {
+                        return response.data
                     })
             }
 

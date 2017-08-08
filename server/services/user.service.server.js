@@ -33,8 +33,8 @@ app.get   ('/api/checkAdmin', checkAdmin)
 
 app.get   ('/api/users/:userId', findUserById)
 app.post  ('/api/users', registerUser)
-app.delete('/api/users/:userId', unregisterUser)
-app.put   ('/api/users/:userId', updateUser)
+app.delete('/api/admin/users/:userId', isAuthorizedUser, unregisterUser)
+app.put   ('/api/users/:userId', isAuthorizedUser, updateUser)
 
 app.get   ('/api/admin/users', isAdmin, findAllUsers)
 
@@ -203,6 +203,15 @@ function isAdmin(req, res, next) {
     }
 }
 
+function isAuthorizedUser(req, res, next) {
+    if (req.isAuthenticated() &&
+        (req.user.roles.indexOf('ADMIN') >= 0 || req.user._id.toString() === req.params['userId'])) {
+        next()
+    } else {
+        res.sendStatus(401)
+    }
+}
+
 function findUserByCredentials(req, res) {
     var username = req.query['username']
     if (username) {
@@ -257,7 +266,9 @@ function unregisterUser(req, res) {
     userModel
         .deleteUser(userId)
         .then(function () {
-            req.logout()
+            if (req.user._id === userId) {  // the middleware function ensures that if the current user
+                req.logout()                // is not the user to be unregistered, he must be an admin.
+            }                               // we do not want admin to be logged out if he removes a user
             res.sendStatus(200)
         })
 }
