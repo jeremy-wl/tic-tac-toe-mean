@@ -12,7 +12,8 @@ var userSchema = mongoose.Schema({
         required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     },
     firstName: String,
     lastName: String,
@@ -24,7 +25,15 @@ var userSchema = mongoose.Schema({
         id: String,
         token: String
     },
-    email: String,
+    email: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        required: 'Email address is required',
+        validate: [validateEmail, 'Please fill in a valid email address'],
+        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please fill in a valid email address.']
+    },
     dateCreated: {
         type: Date,
         default: Date.now
@@ -34,5 +43,10 @@ var userSchema = mongoose.Schema({
         ref: 'game'
     }]
 })
+
+function validateEmail(email) {
+    var re = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+    return re.test(email)
+}
 
 module.exports = userSchema

@@ -23,29 +23,30 @@
             </li>
             <li class="list-group-item listing-users">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <input type="text" id="username" class="form-control" ng-model="model.user.username">
                     </div>
                     <div class="col-sm-4">
                         <input type="text" id="email" class="form-control" ng-model="model.user.email">
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <input type="text" id="roles" class="form-control" ng-model="model.user.roles">
                     </div>
                     <div class="col-sm-2">
                         <!--TODO: use the link that admin clicks -->
-                        <a href="#!/users/{{user._id}}/games">View Games</a>
+                        <a ng-show="model.user._id" href="#!/users/{{model.user._id}}/games">View Games</a>
                     </div>
                     <div class="col-sm-1">
                         <span class="glyphicon glyphicon-remove pull-right" ng-click="model.user={};"></span>
+                        <span class="glyphicon glyphicon-ok pull-right" ng-click="model.upsertUser(model.user)"></span>
                     </div>
                 </div>
             </li>
             <li class="list-group-item" ng-repeat="user in model.users">
                 <div class="row">
-                    <div class="col-sm-3">{{ user.username }}</div>
+                    <div class="col-sm-2">{{ user.username }}</div>
                     <div class="col-sm-4">{{ user.email }}</div>
-                    <div class="col-sm-2">{{ user.roles }}</div>
+                    <div class="col-sm-3">{{ user.roles }}</div>
                     <div class="col-sm-2">
                         <a href="#!/users/{{user._id}}/games">View Games</a>
                     </div>
@@ -53,6 +54,10 @@
                         <span ng-click="model.deleteUser(user._id)"
                               class="glyphicon glyphicon-remove pull-right">
                         </span>
+                        <span ng-click="model.selectUser(user._id)"
+                              class="glyphicon glyphicon-pencil pull-right">
+                        </span>
+
                     </div>
                 </div>
             </li>
