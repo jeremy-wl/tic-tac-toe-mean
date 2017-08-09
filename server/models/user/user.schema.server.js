@@ -11,7 +11,7 @@ var userSchema = mongoose.Schema({
         unique: true,
         required: true
     },
-    password: {
+    password: {      // not required for social login
         type: String
     },
     firstName: String,
