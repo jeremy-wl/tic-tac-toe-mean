@@ -12,7 +12,6 @@ a:hover {
 
 ul.nav > li {
   a[href], a[href]:hover, a[ng-click], a[ng-click]:hover {
-    cursor: hand;
     cursor: pointer;
     font-weight: bold;
   }
@@ -27,7 +26,6 @@ div.input-group-addon.join-game {
     color: white;
   }
   a:hover {
-    cursor: hand;
     cursor: pointer;
   }
   background-color: #5cb85c;
@@ -101,7 +99,6 @@ tr {
 
 .crud-icon {
   text-align: center;
-  font-size: 2px;
 
   &:hover {
     cursor: pointer;

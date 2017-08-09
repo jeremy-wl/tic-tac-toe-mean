@@ -6,11 +6,14 @@
     function gamesListController(currentUser, gameService, $routeParams, $location, $timeout) {
         var model = this
         model.getGamesInfo = getGamesInfo
-        model.user = currentUser
+        model.removeGame = removeGame
+        model.isAdmin = isAdmin
 
         init()
 
         function init() {
+            model.user = currentUser
+            console.log(model.isAdmin(model.user))
             var userId = $routeParams['userId']
             getGamesInfo(userId)
         }
@@ -27,6 +30,7 @@
 
             return promise
                 .then(function (games) {
+                    console.log(games)
                     games.forEach(function (game) {
                         if      (game._winner === '0')  game.result = 'Ties'
                         else if (game._winner === '3')  game.result = 'Lost'  // lost to robot
@@ -49,6 +53,20 @@
                 .catch(function (err) {
                     console.log(err)
                     $location.url('/')
+                })
+        }
+
+        function removeGame(gameId) {
+            return gameService
+                .removeGame(gameId)
+                .then(function () {
+                    console.log('Game removed successfully.')
+
+                    // removing the game at the front end
+                    var gameToBeRemoved = model.games.find(function (game) {
+                        return game._id === gameId
+                    })
+                    model.games.splice(model.games.indexOf(gameToBeRemoved), 1)
                 })
         }
 

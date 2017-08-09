@@ -50,14 +50,13 @@
                     <div class="col-sm-2">
                         <a href="#!/users/{{user._id}}/games">View Games</a>
                     </div>
-                    <div class="col-sm-1">
-                        <span ng-click="model.deleteUser(user._id)"
+                    <div class="col-sm-1 crud-icon">
+                        <span ng-click="model.deleteUser(user)"
                               class="glyphicon glyphicon-remove pull-right">
                         </span>
                         <span ng-click="model.selectUser(user._id)"
                               class="glyphicon glyphicon-pencil pull-right">
                         </span>
-
                     </div>
                 </div>
             </li>

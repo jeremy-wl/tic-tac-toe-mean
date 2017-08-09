@@ -5,6 +5,7 @@ var userModel = mongoose.model('user', userSchema)
 var gameModel = mongoose.model('game', gameSchema)
 
 gameModel.createGame = createGame
+gameModel.findAllGamesByUser = findAllGamesByUser
 gameModel.addWinnerToGame = addWinnerToGame
 
 module.exports = gameModel
@@ -24,6 +25,22 @@ function createGame(game) {
         })
         .then(function () {
             return gameObj
+        })
+}
+
+function findAllGamesByUser(userId) {
+    return userModel
+        .findById(userId)
+        .populate({
+            path: 'games',
+            model: 'game',
+            populate: {
+                path: '_player1 _player2 board',
+            }
+        })
+        .exec()
+        .then(function (user) {
+            return user.games
         })
 }
 

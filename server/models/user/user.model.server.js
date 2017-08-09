@@ -11,6 +11,7 @@ userModel.findUserByGoogleId = findUserByGoogleId
 userModel.findUserByFacebookId = findUserByFacebookId
 userModel.updateUser = updateUser
 userModel.deleteUser = deleteUser
+userModel.removeGameFromUser = removeGameFromUser
 
 module.exports = userModel
 
@@ -66,4 +67,20 @@ function updateUser(userId, newUser) {
 
 function deleteUser(userId) {
     return userModel.remove({ _id: userId })
+}
+
+function removeGameFromUser(userId, gameId) {
+
+    return userModel
+        .findById(userId)
+        .populate('games')
+        .then(function (user) {
+            var gameToBeRemoved = user.games.find(function (game) {
+                return game._id.toString() === gameId                 // MUST convert _id to string,
+            })                                                        // debugged over an hour for this
+            user.games.splice(user.games.indexOf(gameToBeRemoved), 1)
+            return user.save()
+        }, function (err) {
+            console.log(err)
+        })
 }

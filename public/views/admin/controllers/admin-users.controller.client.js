@@ -37,16 +37,18 @@
                 })
         }
 
-        function deleteUser(userId) {
-            userService
-                .deleteUser(userId)
-                .then(function () {  // removing that user from view model
-                    var deletedUser = model.users.find(function (user) {
-                        return userId === user._id
+        function deleteUser(user) {
+            if (confirm('Are you sure to delete user ' + user.username + ' ?')) {
+                userService
+                    .deleteUser(user._id)
+                    .then(function () {  // removing that user from view model
+                        var deletedUser = model.users.find(function (u) {
+                            return user._id === u._id
+                        })
+                        var index = model.users.indexOf(deletedUser)
+                        model.users.splice(index, 1)
                     })
-                    var index = model.users.indexOf(deletedUser)
-                    model.users.splice(index, 1)
-                })
+            }
         }
 
         function selectUser(userId) {

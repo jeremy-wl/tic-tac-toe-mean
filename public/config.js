@@ -48,7 +48,7 @@
                 }
             })
             .when('/games', {
-                templateUrl: 'views/games/templates/games-index.view.client.html',
+                templateUrl: 'views/games/templates/games-list.view.client.html',
                 controller: 'gamesListController',
                 controllerAs: 'model',
                 resolve: {
@@ -56,7 +56,7 @@
                 }
             })
             .when('/users/:userId/games', {
-                templateUrl: 'views/games/templates/games-index.view.client.html',
+                templateUrl: 'views/games/templates/games-list.view.client.html',
                 controller: 'gamesListController',
                 controllerAs: 'model',
                 resolve: {

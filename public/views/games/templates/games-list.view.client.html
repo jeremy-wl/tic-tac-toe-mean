@@ -7,10 +7,11 @@
         <th>Player 1</th>
         <th>Player 2</th>
         <th>Grid</th>
+        <th>Total Moves</th>
         <th>Result</th>
         <th>Date Created</th>
         <th>View</th>
-        <th>Remove</th>
+        <th ng-if="model.isAdmin(model.user)">Remove</th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td>{{ game._player1.username }}</td>
         <td>{{ game._player2.username == null ? 'Computer' : game._player2.username}}</td>
         <td>{{ game.board.grid }}</td>
+        <td>{{ game.board.moves.length }}</td>
         <td>{{ game.result }}</td>
         <td>{{ game.dateCreated | date:'MM/dd/yyyy @ h:mma' }}</td>
         <td>
@@ -26,10 +28,10 @@
                 View Game
             </a>
         </td>
-        <td class="crud-icon" ng-click="">
-            ×
+        <td ng-if="model.isAdmin(model.user)" class="crud-icon" ng-click="model.removeGame(game._id)">
+            <span class="glyphicon glyphicon-remove">
+            </span>
         </td>
-        <!--TODO: Server-side CRUD validation using passport authentication middleware -->
     </tr>
     </tbody>
 </table>
