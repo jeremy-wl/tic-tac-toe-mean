@@ -22,7 +22,7 @@
             var promise
 
             if (isAdmin(currentUser) && !userId) {
-                promise = gameService.findAllGames()
+                promise = gameService.findAllGames()  // admin viewing /games does not need a userId
             } else {
                 if (!userId)  userId = currentUser._id
                 promise = gameService.findAllGamesByUser(userId)
@@ -33,6 +33,15 @@
                     console.log(games)
                     games.forEach(function (game) {
                         if      (game._winner === '0')  game.result = 'Ties'
+                        else if (!game._winner)
+                            game.result = 'Player left before game ends'
+                        else if (isAdmin(currentUser)) {
+                            switch (game._winner) {
+                                case '3' : game.result = 'Computer';             break;
+                                case '1' : game.result = game._player1.username; break;
+                                case '2' : game.result = game._player2.username; break;
+                            }
+                        }
                         else if (game._winner === '3')  game.result = 'Lost'  // lost to robot
                         else {
                             if (game._winner === '1' && currentUser._id === game._player1._id ||

@@ -46,10 +46,6 @@
                 <li ng-show="model.user">
                     <a ng-click="model.logout()">Logout</a>
                 </li>
-
-                <li ng-if="model.user && model.user.roles.indexOf('ADMIN') >= 0">
-                    <a href="#!/admin">Admin Portal</a>
-                </li>
             </ul>
         </div>
     </div>

@@ -8,7 +8,7 @@
         <th>Player 2</th>
         <th>Grid</th>
         <th>Total Moves</th>
-        <th>Result</th>
+        <th>{{ model.isAdmin(model.user) ? 'Winner' : 'Result' }}</th>
         <th>Date Created</th>
         <th>View</th>
         <th ng-if="model.isAdmin(model.user)">Remove</th>
