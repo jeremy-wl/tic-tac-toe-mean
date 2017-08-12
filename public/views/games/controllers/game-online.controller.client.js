@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('gameOnlineController', gameOnlineController)
 
-    function gameOnlineController(currentUser, userService, gameService, gameHelpers, moveService, socket) {
+    function gameOnlineController(currentUser, userService, gameService, gameHelpers, moveService, socket, $scope) {
         var model = this
         model.user = currentUser
         model.logout = userService.logout
@@ -24,6 +24,24 @@
                 grid: 3
             }
             model.gridChanged(model.shared.grid)
+
+            // window.onbeforeunload = function(event) {
+            //     if (gameHelpers.gameInProgress(model)) {
+            //         window.onbeforeunload = null  // doesn't work
+            //         return
+            //     }
+            //     return confirm("Are you sure to leave the page? This will make you lose this game!")
+            // };
+
+            $scope.$on('$routeChangeStart', function(event, next, current) {
+                if (gameHelpers.gameInProgress(model)) {
+                    if (confirm('Are you sure to leave the page? This will make you lose this game!')) {
+                        socket.emit('leave during game', currentUser.username)
+                    } else {
+                        event.preventDefault()
+                    }
+                }
+            })
         }
 
         function startGame(grid) {
@@ -60,8 +78,8 @@
          *    - move
          *    - gameResult (if game end)
          */
-        function makeMove(position, isMyTurn) {
-            if (isMyTurn && gameInProgress() && gameHelpers.moveOnEmptyCell(position)) {
+        function makeMove(position) {
+            if (model.isMyTurn && gameInProgress() && gameHelpers.moveOnEmptyCell(position)) {
                 model.isMyTurn = !model.isMyTurn
                 var move = {
                     position: position,
@@ -106,7 +124,7 @@
                             model.result = 'You lose :('
                         }
                     }
-                    socket.emit('game over')
+                    socket.emit('game over', currentUser.username)
                 }
 
                 var cssClass = move._player === model.shared.game._player1 ? 'move-made-X' : 'move-made-O'
@@ -188,6 +206,20 @@
             })
 
             socket.on('move made', afterMove(model))
+
+            socket.on('someone fled', function () {
+                // if the player is able to receive this message, he is the one
+                // who does not flee; the other player is already disconnected, and therefore
+                // cannot execute the code below
+                var winner = currentUser._id === model.shared.game._player1 ? '1' : '2'
+                return gameService
+                    .addWinnerToGame(model.shared.game, winner)
+                    .then(function (game) {
+                        socket.emit('game over', currentUser.username)
+                        gameHelpers.popMessage(model, 'You win! Your opponent ran away.')
+                        model.result = 'You win :)'
+                    })
+            })
         }
     }
 })()

@@ -15,7 +15,7 @@
             <table class="table table-bordered table-inverse">
                 <tr ng-repeat="i in model.rowIndex">
                     <td ng-repeat="j in model.colIndex" data-move="{{i*model.shared.grid+j}}"
-                        ng-click="model.makeMove(i*model.shared.grid+j, model.isMyTurn)">
+                        ng-click="model.makeMove(i*model.shared.grid+j)">
                     </td>
                 </tr>
             </table>

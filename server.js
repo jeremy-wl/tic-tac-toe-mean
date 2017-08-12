@@ -43,6 +43,7 @@ io.on('connection', function (socket) {
 
         } else {
             var room = socketQueue[0]
+            if (room === socket.room)  return
             joinRoom(socket, user.username, room)
             socketQueue.shift()  // dequeue room
             io.to(room).emit('game starts', user)
@@ -59,21 +60,32 @@ io.on('connection', function (socket) {
         io.to(room).emit('move made', moveObj)
     });
 
-    socket.on('game over', function(data) {  // no data passed
-        socket.leave(socket.room)
+    socket.on('game over', function(username) {
+        leaveRoom(socket, username)
     });
 
-    socket.on('disconnect', function(socket) {
-        console.log('Player (socket id: '+ socket.id + ') disconnects');
-        // remove client from room in the queue (automatically?)
+    socket.on('disconnect', function() {
+        var room = socket.room
+        if (socket.room) {
+            leaveRoom(socket)
+            console.log('Player (socket id: '+ socket.id + ') disconnects');
+            io.to(room).emit('someone fled')
+        }
     });
+
+    socket.on('leave during game', function (username) {
+        var room = socket.room
+        leaveRoom(socket)
+        io.to(room).emit('someone fled')
+        console.log('Player ' + username + '                      (' + socket.id + ') leaves ' + room)
+    })
 
     function createRoom(socket, username) {
         // leaveRoom(socket, username)
 
         var room = socket.id
         socketQueue.push(room)
-        console.log('new room ' + socket.id + ' created by' + username)
+        console.log('new room ' + socket.id + ' created by ' + username)
 
         joinRoom(socket, username, room)
     }
