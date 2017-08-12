@@ -6,6 +6,5 @@ node_modules
 .DS_Store
 bower_components
 .env
-*.css
 *.css.map
 docs

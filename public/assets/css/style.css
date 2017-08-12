@@ -1,0 +1,73 @@
+body {
+  padding: 60px 10px 60px 10px; }
+
+.form-element-margin input, textarea {
+  margin-bottom: 5px; }
+
+a:hover {
+  text-decoration: none; }
+
+ul.nav > li a[href], ul.nav > li a[href]:hover, ul.nav > li a[ng-click], ul.nav > li a[ng-click]:hover {
+  cursor: pointer;
+  font-weight: bold; }
+
+.game-settings {
+  text-align: center; }
+
+div.input-group-addon.join-game {
+  background-color: #5cb85c; }
+  div.input-group-addon.join-game a {
+    color: white; }
+  div.input-group-addon.join-game a:hover {
+    cursor: pointer; }
+
+nav.navbar ul > li:not(:first-child):hover, .col-md-6 > ul > li:hover {
+  background-color: #E7E7E7; }
+
+.navbar-blue {
+  background-color: #337ab7; }
+
+.text-white {
+  color: #fff; }
+
+.text-black {
+  color: rgba(0, 0, 0, 0.77); }
+
+.text-dark-gray {
+  color: #777777; }
+
+.disabled {
+  cursor: not-allowed; }
+
+.table.table-bordered.table-inverse {
+  width: 95%;
+  height: 65vh;
+  margin-left: auto;
+  margin-right: auto; }
+  .table.table-bordered.table-inverse .move-made-X {
+    background-image: url("../images/x.png");
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center; }
+  .table.table-bordered.table-inverse .move-made-O {
+    background-image: url("../images/o.png");
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center; }
+
+div.col-md-6 ul {
+  width: 95%;
+  height: 65vh;
+  overflow: auto; }
+  div.col-md-6 ul li {
+    overflow-y: scroll; }
+
+tr td, tr th {
+  text-align: center; }
+
+.crud-icon {
+  text-align: center; }
+  .crud-icon:hover {
+    cursor: pointer; }
+
+/*# sourceMappingURL=style.css.map */
