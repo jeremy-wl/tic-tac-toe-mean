@@ -24,21 +24,20 @@
             <li class="list-group-item listing-users">
                 <div class="row">
                     <div class="col-sm-2">
-                        <input type="text" id="username" class="form-control" ng-model="model.user.username">
+                        <input type="text" id="username" class="form-control" ng-model="model.userEditing.username">
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" id="email" class="form-control" ng-model="model.user.email">
+                        <input type="text" id="email" class="form-control" ng-model="model.userEditing.email">
                     </div>
                     <div class="col-sm-3">
-                        <input type="text" id="roles" class="form-control" ng-model="model.user.roles">
+                        <input type="text" id="roles" class="form-control" ng-model="model.userEditing.roles">
                     </div>
                     <div class="col-sm-2">
-                        <!--TODO: use the link that admin clicks -->
-                        <a ng-show="model.user._id" href="#!/users/{{model.user._id}}/games">View Games</a>
+                        <a ng-show="model.userEditing._id" href="#!/users/{{model.userEditing._id}}/games">View Games</a>
                     </div>
                     <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove pull-right" ng-click="model.user={};"></span>
-                        <span class="glyphicon glyphicon-ok pull-right" ng-click="model.upsertUser(model.user)"></span>
+                        <span class="glyphicon glyphicon-remove pull-right" ng-click="model.userEditing={};"></span>
+                        <span class="glyphicon glyphicon-ok pull-right" ng-click="model.upsertUser(model.userEditing)"></span>
                     </div>
                 </div>
             </li>

@@ -3,7 +3,7 @@
         .module('ttt')
         .controller('adminUsersController', adminUsersController)
 
-    function adminUsersController(userService) {
+    function adminUsersController(userService, currentUser) {
         var model = this
         model.logout = userService.logout
         model.selectUser = selectUser
@@ -13,7 +13,8 @@
         init()
 
         function init() {
-            model.user = {}
+            model.user = currentUser
+            model.userEditing = {}
             userService
                 .findAllUsers()
                 .then(function (users) {
@@ -47,7 +48,7 @@
             var selectedUser = model.users.find(function (user) {
                 return user._id === userId
             })
-            model.user = angular.copy(selectedUser)
+            model.userEditing = angular.copy(selectedUser)
         }
 
         function upsertUser(user) {
@@ -67,7 +68,7 @@
                     findAllUsers()   // re-fetch updated users list from server
                 })
                 .then(function () {
-                    model.user = {}
+                    model.userEditing = {}
                 })
                 .catch(function (obj) {         // unwrapping error messages, could be
                     var data = obj.data || obj  // - duplicate username

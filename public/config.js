@@ -107,7 +107,7 @@
                         deferred.reject()
                         $location.url('/')
                     } else {
-                        deferred.resolve()
+                        deferred.resolve(user)
                     }
                 })
 
