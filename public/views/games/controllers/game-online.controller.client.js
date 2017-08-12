@@ -33,7 +33,7 @@
             //     return confirm("Are you sure to leave the page? This will make you lose this game!")
             // };
 
-            $scope.$on('$routeChangeStart', function(event, next, current) {
+            $scope.$on('$destroy', function(event, next, current) {
                 if (gameHelpers.gameInProgress(model)) {
                     if (confirm('Are you sure to leave the page? This will make you lose this game!')) {
                         socket.emit('leave during game', currentUser.username)
@@ -41,10 +41,11 @@
                         event.preventDefault()
                     }
                 }
-            })
-        }
-
-        function startGame(grid) {
+                socket.removeAllListeners()  // Need to unsubscribe all socket listeners on controller change;
+            })                               // otherwise if navigates back, duplicate listeners are registered,
+        }                                    // causing same events being fired multiple times, e.g.
+                                             // triggering 'game starts' several times at once causes multiple
+        function startGame(grid) {           // games to be created on game start
             model.moves = 0
 
             model.rows = new Array(grid).fill(0)

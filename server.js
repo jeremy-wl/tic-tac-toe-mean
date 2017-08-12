@@ -77,7 +77,6 @@ io.on('connection', function (socket) {
         var room = socket.room
         leaveRoom(socket)
         io.to(room).emit('someone fled')
-        console.log('Player ' + username + '                      (' + socket.id + ') leaves ' + room)
     })
 
     function createRoom(socket, username) {

@@ -8,6 +8,7 @@
 
             api.on = on
             api.emit = emit
+            api.removeAllListeners = removeAllListeners
 
             return api
 
@@ -29,6 +30,10 @@
                         }
                     });
                 })
+            }
+
+            function removeAllListeners() {
+                socket.removeAllListeners()
             }
         })
 })()
