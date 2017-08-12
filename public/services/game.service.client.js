@@ -61,7 +61,7 @@
                     .getAllMovesFromBoard(game.board)
                     .then(function (moves) {
                         var movesStr = movesPositionsToString(moves)
-                        var url = 'http://tttapi.herokuapp.com/api/v1/' + movesStr + '/O'
+                        var url = 'https://tttapi.herokuapp.com/api/v1/' + movesStr + '/O'
                         return $http.get(url)  // {"game":"---------","player":"0","recommendation":2,"strength":-1}
                             .then(function (obj) {
                                 var move = {

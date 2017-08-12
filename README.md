@@ -36,7 +36,20 @@ Two user roles are implemented in this web app
    * View all games by that user
    * And of course, view all games by all users
    
- ## Usage
+## Note
+ - For Local Game:
+ 
+   At the beginning, it will **take the API about 5 seconds to respond** and make a move 
+   (the third-party Heroku App needs to wake up from sleep due to inactivity)
+ - For Online Game: 
+ 
+   You will need to 
+   1. use a different browser OR same browser but the other page in incognito mode 
+   2. use two different accounts 
+   
+   to start the game (so that the user cannot cheat easily :D)
+    
+## Usage
  0. Make sure you have Node.js and MongoDB installed and configured
  1. `$ git clone https://github.com/jeremylinlin/tic-tac-toe-mean.git`
  2. `$ cd tic-tac-toe-mean/`
