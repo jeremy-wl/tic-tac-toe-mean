@@ -3,11 +3,12 @@
         .module('ttt')
         .controller('gamesListController', gamesListController)
 
-    function gamesListController(currentUser, gameService, $routeParams, $location, $timeout) {
+    function gamesListController(currentUser, userService, gameService, $routeParams, $location, $timeout) {
         var model = this
         model.getGamesInfo = getGamesInfo
         model.removeGame = removeGame
         model.isAdmin = isAdmin
+        model.logout = userService.logout
 
         init()
 

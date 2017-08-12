@@ -1,10 +1,11 @@
+<div ng-include="'views/home/templates/home-navbar.view.client.html'"></div>
+
 <div class="container-fluid form-element-margin text-center">
     <div ng-show="model.error" class="alert alert-danger">{{ model.error }}</div>
     <h1>Login</h1>
     <input ng-model="username" type="text" class="form-control" placeholder="Username"/>
     <input ng-model="password" type="password" class="form-control" placeholder="Password"/>
     <a class="btn btn-primary btn-block" ng-click="model.login(username, password)">Login</a>
-    <a class="btn btn-success btn-block" href="#!/register">Register</a>
     <a href="/auth/google" class="btn btn-danger btn-block">
         <span class="fa fa-google-plus"></span>
         Google

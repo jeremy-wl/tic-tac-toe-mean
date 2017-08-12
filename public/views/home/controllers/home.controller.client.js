@@ -5,14 +5,15 @@
 
     function homeController(userService, currentUser) {
         var model = this
-        model.user = currentUser
         model.isAdmin = isAdmin
         model.logout = logout
 
         init()
 
         function init() {
-
+            if (currentUser) {
+                model.user = currentUser
+            }
         }
 
         function logout() {

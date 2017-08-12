@@ -3,9 +3,10 @@
         .module('ttt')
         .controller('gameOnlineController', gameOnlineController)
 
-    function gameOnlineController(currentUser, gameService, gameHelpers, moveService, socket) {
+    function gameOnlineController(currentUser, userService, gameService, gameHelpers, moveService, socket) {
         var model = this
         model.user = currentUser
+        model.logout = userService.logout
         model.addSocketIOListeners = addSocketIOListeners
         model.joinRoom = joinRoom
         model.startGame = startGame

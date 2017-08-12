@@ -3,11 +3,12 @@
         .module('ttt')
         .controller('gameLocalController', gameLocalController)
 
-    function gameLocalController(currentUser, gameService, gameHelpers, moveService) {
+    function gameLocalController(currentUser, userService, gameService, gameHelpers, moveService) {
         var model = this
         model.user = currentUser
         model.startGame = startGame
         model.makeMove = makeMove
+        model.logout = userService.logout
 
         init()
 

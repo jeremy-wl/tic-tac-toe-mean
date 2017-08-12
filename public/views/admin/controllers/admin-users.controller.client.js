@@ -3,9 +3,9 @@
         .module('ttt')
         .controller('adminUsersController', adminUsersController)
 
-    function adminUsersController(userService, $location) {
+    function adminUsersController(userService) {
         var model = this
-        model.logout = logout
+        model.logout = userService.logout
         model.selectUser = selectUser
         model.upsertUser = upsertUser
         model.deleteUser = deleteUser
@@ -18,14 +18,6 @@
                 .findAllUsers()
                 .then(function (users) {
                     model.users = users
-                })
-        }
-
-        function logout() {
-            userService
-                .logout()
-                .then(function () {
-                    $location.url('/')
                 })
         }
 

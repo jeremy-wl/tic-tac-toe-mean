@@ -77,7 +77,7 @@
                 var url = '/api/logout'
                 return $http.post(url)
                     .then(function (response) {
-                        return response.data
+                        $location.url('/')
                     })
             }
 
